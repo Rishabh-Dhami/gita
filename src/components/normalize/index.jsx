@@ -16,7 +16,7 @@ import React from 'react';
 
 import { GlobalStyle } from './style/style.jsx';
 
-function GitaGlobalStyle({ children, ...props }) {
+function GitaGlobalStyle({ ...props }) {
   return <GlobalStyle {...props}></GlobalStyle>;
 }
 

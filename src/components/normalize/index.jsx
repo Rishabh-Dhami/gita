@@ -16,6 +16,9 @@ import React from 'react';
 
 import { GlobalStyle } from './style/style.jsx';
 
+/**
+ * Normalizes the browser styles.
+ */
 function GitaGlobalStyle({ ...props }) {
   return <GlobalStyle {...props}></GlobalStyle>;
 }

@@ -14,7 +14,7 @@
 
 import React from 'react';
 
-import { GlobalStyle } from './style/style.jsx';
+import { GlobalStyle } from './styles/styles.jsx';
 
 /**
  * Normalizes the browser styles.

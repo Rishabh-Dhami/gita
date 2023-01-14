@@ -143,19 +143,19 @@ LOGGER.prototype._log = function (level, message, ...args) {
     case LOGGING_LEVELS.OFF:
       return;
     case LOGGING_LEVELS.ERROR:
-      logger = console.error || console.log;
+      logger = console?.error || console.log;
       break;
     case LOGGING_LEVELS.WARN:
-      logger = console.warn || console.log;
+      logger = console?.warn || console.log;
       break;
     case LOGGING_LEVELS.INFO:
-      logger = console.info || console.log;
+      logger = console?.info || console.log;
       break;
     case LOGGING_LEVELS.DEBUG:
-      logger = console.debug || console.log;
+      logger = console?.debug || console.log;
       break;
     case LOGGING_LEVELS.TRACE:
-      logger = console.trace || console.log;
+      logger = console?.trace || console.log;
       break;
   }
 

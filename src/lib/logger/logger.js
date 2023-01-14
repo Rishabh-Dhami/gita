@@ -159,7 +159,7 @@ LOGGER.prototype._log = function (level, message, ...args) {
       break;
   }
 
-  message = `[${level.name}]: ${message}`;
+  message = `[${this.name}]::[${level.name}]: ${message}`;
   logger(message, ...args);
 };
 

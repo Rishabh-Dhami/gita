@@ -2,6 +2,7 @@
   "extends": "google",
   "rules": {
     "require-jsdoc": "off",
+    "valid-jsdoc": "off",
     "object-curly-spacing": "off",
     "indent": "off"
   }

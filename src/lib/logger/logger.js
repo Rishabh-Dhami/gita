@@ -65,9 +65,10 @@ var LoggerInstances = [];
  * Each newly created instance of `LOGGER` must have a unique name otherwise
  * in case of a duplicate name an error is thrown out of this function.
  */
-function LOGGER(name, level) {
+function LOGGER(name, filename, level) {
   this.name = name;
   this.level = level;
+  this.filename = filename;
 
   for (let instance in LoggerInstances) {
     if (instance.name === this.name) {
@@ -77,12 +78,12 @@ function LOGGER(name, level) {
   LoggerInstances.push(this);
 }
 
-LOGGER.prototype.OFF = defineLogLevel(LOGGING_LEVELS.OFF);
-LOGGER.prototype.ERROR = defineLogLevel(LOGGING_LEVELS.ERROR);
-LOGGER.prototype.WARN = defineLogLevel(LOGGING_LEVELS.WARN);
-LOGGER.prototype.INFO = defineLogLevel(LOGGING_LEVELS.INFO);
-LOGGER.prototype.DEBUG = defineLogLevel(LOGGING_LEVELS.DEBUG);
-LOGGER.prototype.TRACE = defineLogLevel(LOGGING_LEVELS.TRACE);
+LOGGER.OFF = defineLogLevel(LOGGING_LEVELS.OFF);
+LOGGER.ERROR = defineLogLevel(LOGGING_LEVELS.ERROR);
+LOGGER.WARN = defineLogLevel(LOGGING_LEVELS.WARN);
+LOGGER.INFO = defineLogLevel(LOGGING_LEVELS.INFO);
+LOGGER.DEBUG = defineLogLevel(LOGGING_LEVELS.DEBUG);
+LOGGER.TRACE = defineLogLevel(LOGGING_LEVELS.TRACE);
 
 /**
  * Set the logging level for the current logger, if the level is not given
@@ -90,7 +91,7 @@ LOGGER.prototype.TRACE = defineLogLevel(LOGGING_LEVELS.TRACE);
  */
 LOGGER.prototype.setLevel = function (level) {
   if (level == null) {
-    this.level = this.INFO;
+    this.level = LOGGER.INFO;
   } else {
     this.level = level;
   }
@@ -106,27 +107,27 @@ LOGGER.prototype._isActive = function (level) {
 
 /** Display error messages if the "ERROR" level is active. */
 LOGGER.prototype.error = function (message, ...args) {
-  this._log(this.ERROR, message, ...args);
+  this._log(LOGGER.ERROR, message, ...args);
 };
 
 /** Display warning messages if the "WARN" level is active. */
 LOGGER.prototype.warn = function (message, ...args) {
-  this._log(this.WARN, message, ...args);
+  this._log(LOGGER.WARN, message, ...args);
 };
 
 /** Display information messages if the "INFO" level is active. */
 LOGGER.prototype.info = function (message, ...args) {
-  this._log(this.INFO, message, ...args);
+  this._log(LOGGER.INFO, message, ...args);
 };
 
 /** Display debugging messages if the "DEBUG" level is active. */
 LOGGER.prototype.debug = function (message, ...args) {
-  this._log(this.DEBUG, message, ...args);
+  this._log(LOGGER.DEBUG, message, ...args);
 };
 
 /** Display stack traces if "TRACE" level is active. */
 LOGGER.prototype.trace = function (message, ...args) {
-  this._log(this.TRACE, message, ...args);
+  this._log(LOGGER.TRACE, message, ...args);
 };
 
 /**
@@ -159,8 +160,42 @@ LOGGER.prototype._log = function (level, message, ...args) {
       break;
   }
 
-  message = `[${this.name}]::[${level.name}]: ${message}`;
-  logger(message, ...args);
+  // Clones the given object either using the "structured clone" algorithm
+  // or manually copying each attribute to a new object in case the
+  // browser does not support the "structured clone" algorithm.
+  const clone = (o) => {
+    if (typeof structuredClone !== 'undefined') {
+      return structuredClone(o);
+    }
+
+    if (o == null || typeof o !== 'object') {
+      return o;
+    }
+
+    let copy = o.constructor();
+    for (let attr in o) {
+      // Only copy the object's own property - not something that is
+      // inherited.
+      if (o.hasOwnProperty(attr)) {
+        copy[attr] = o[attr];
+      }
+    }
+    return copy;
+  };
+
+  const context = clone(args?.context);
+  if (context) {
+    delete args.context;
+  }
+
+  if (message) {
+    message = `[${this.filename}]::[${this.name}]::[${level.name}]: ${message}`;
+    logger(message, ...args);
+  }
+  if (context) {
+    message = `[${this.filename}]::[${this.name}]::[${level.name}]: Context\n`;
+    logger(message, context);
+  }
 };
 
 export default LOGGER;

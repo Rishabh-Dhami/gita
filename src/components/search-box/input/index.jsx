@@ -15,6 +15,10 @@
 import React from 'react';
 import { useRef, useEffect } from 'react';
 
+import LOGGER from '../../../lib/logger/logger.js';
+
+import { getFileName } from '../../../lib/utils/fs.js';
+
 import {
   StyledInput,
   StyledIconContainer,
@@ -37,8 +41,33 @@ function Input({
   iconBoxSize,
   type,
   onKeyDown,
+  debug = false,
 }) {
   const inputRef = useRef(null);
+
+  const context = {
+    placeholder,
+    name,
+    value,
+    onChange,
+    onFocus,
+    inputFontColor,
+    inputBorderColor,
+    inputFontSize,
+    inputHeight,
+    inputBackgroundColor,
+    autoFocus,
+    leftIcon,
+    iconBoxSize,
+    type,
+    onKeyDown,
+  };
+  const logger = new LOGGER(
+    Input.name,
+    getFileName(import.meta.url),
+    debug === true ? LOGGER.DEBUG : LOGGER.OFF
+  );
+  logger.debug(null, context);
 
   useEffect(() => {
     // Focusses on the input box if the `autoFocus` prop is `true`.

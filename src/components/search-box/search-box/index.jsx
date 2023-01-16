@@ -17,7 +17,10 @@ import { useState, useRef } from 'react';
 
 import Fuse from 'fuse.js';
 
+import LOGGER from '../../../lib/logger/logger.js';
 import useOutsideClick from '../hooks/useOutisdeClick.js';
+
+import { getFileName } from '../../../lib/utils/fs.js';
 
 import { Input, Dropdown } from '../index.jsx';
 import { StyledContainer } from './styles/styles.jsx';
@@ -42,6 +45,7 @@ function SearchBox({
   leftIcon,
   iconBoxSize = '24px',
   type = 'text',
+  debug = false,
 }) {
   const [matchedRecords, setMatchedRecords] = useState([]);
   const [value, setValue] = useState('');
@@ -84,6 +88,34 @@ function SearchBox({
   // Override the defaultFuseConfigs with fuseConfigs given by the user.
   const fuseConfigs = Object.assign({}, defaultFuseConfigs, fuseConfigs);
   const fuse = new Fuse(data, fuseConfigs);
+
+  const context = {
+    placeholder,
+    name,
+    data,
+    fuseConfigs,
+    autoFocus,
+    onselect,
+    onFocus,
+    onChange,
+    inputBackgroundColor,
+    inputFontColor,
+    inputBorderColor,
+    inputFontSize,
+    inputHeight,
+    dropdownHoverColor,
+    dropdownBorderColor,
+    clearOnSelect,
+    leftIcon,
+    iconBoxSize,
+    type,
+  };
+  const logger = new LOGGER(
+    SearchBox.name,
+    getFileName(import.meta.url),
+    debug === true ? LOGGER.DEBUG : LOGGER.OFF
+  );
+  logger.debug(null, context);
 
   // Responsible for checking if any items from the input box's value matches
   // with any item from the `data` prop. If any item matches then that matched

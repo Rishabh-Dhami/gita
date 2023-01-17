@@ -86,7 +86,7 @@ function SearchBox({
   };
 
   // Override the defaultFuseConfigs with fuseConfigs given by the user.
-  const fuseConfigs = Object.assign({}, defaultFuseConfigs, fuseConfigs);
+  fuseConfigs = Object.assign({}, defaultFuseConfigs, fuseConfigs);
   const fuse = new Fuse(data, fuseConfigs);
 
   const context = {

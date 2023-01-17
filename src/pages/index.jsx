@@ -12,20 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
-
-import { BrowserRouter } from 'react-router-dom';
-
-import { SigIn } from './pages/index.jsx';
-
-function App() {
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <SigIn />
-      </div>
-    </BrowserRouter>
-  );
-}
-
-export default App;
+export { default as SigIn } from './signin/index.jsx';

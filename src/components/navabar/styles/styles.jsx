@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import styled from 'styled-components';
 
-import { BrowserRouter } from 'react-router-dom';
+export const NavbarContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-sizing: border-box;
+  box-shadow: 0px -5px 20px #888888;
 
-import { SigIn } from './pages/index.jsx';
-
-function App() {
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <SigIn />
-      </div>
-    </BrowserRouter>
-  );
-}
-
-export default App;
+  > div {
+    position: relative;
+  }
+`;

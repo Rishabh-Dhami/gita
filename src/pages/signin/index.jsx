@@ -14,18 +14,16 @@
 
 import React from 'react';
 
-import { BrowserRouter } from 'react-router-dom';
+import { Navbar } from '../../components/index.jsx';
 
-import { SigIn } from './pages/index.jsx';
+import { SignInContainer } from './styles/styles.jsx';
 
-function App() {
+function SignIn() {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <SigIn />
-      </div>
-    </BrowserRouter>
+    <SignInContainer>
+      <Navbar></Navbar>
+    </SignInContainer>
   );
 }
 
-export default App;
+export default SignIn;

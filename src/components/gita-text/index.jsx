@@ -14,18 +14,18 @@
 
 import React from 'react';
 
-import { BrowserRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { SigIn } from './pages/index.jsx';
+import { GitaTextContainer } from './styles/styles.jsx';
 
-function App() {
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <SigIn />
-      </div>
-    </BrowserRouter>
-  );
+function GitaText() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/home');
+  };
+
+  return <GitaTextContainer onClick={handleClick}>Gita</GitaTextContainer>;
 }
 
-export default App;
+export default GitaText;

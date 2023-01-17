@@ -14,18 +14,28 @@
 
 import React from 'react';
 
-import { BrowserRouter } from 'react-router-dom';
+import LOGGER from '../../lib/logger/logger.js';
+import { getFileName } from '../../lib/utils/fs.js';
 
-import { SigIn } from './pages/index.jsx';
+import { GitaText } from '../index.jsx';
 
-function App() {
+import { NavbarContainer } from './styles/styles.jsx';
+
+function Navbar({ rightChild, debug = false }) {
+  const context = { rightChild };
+  const logger = new LOGGER(
+    Navbar.name,
+    getFileName(import.meta.url),
+    debug === true ? LOGGER.DEBUG : LOGGER.INFO
+  );
+  logger.debug(null, context);
+
   return (
-    <BrowserRouter>
-      <div className="App">
-        <SigIn />
-      </div>
-    </BrowserRouter>
+    <NavbarContainer>
+      {<GitaText />}
+      {rightChild && <div>{rightChild}</div>}
+    </NavbarContainer>
   );
 }
 
-export default App;
+export default Navbar;

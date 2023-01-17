@@ -12,4 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+export { SearchBox } from './search-box/index.jsx';
+
+export { default as Navbar } from './navabar/index.jsx';
+export { default as GitaText } from './gita-text/index.jsx';
 export { default as GitaGlobalStyle } from './normalize/index.jsx';

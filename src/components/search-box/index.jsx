@@ -14,3 +14,4 @@
 
 export { default as Input } from './input/index.jsx';
 export { default as Dropdown } from './dropdown/index.jsx';
+export { default as SearchBox } from './search-box/index.jsx';

@@ -12,20 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import styled from 'styled-components';
 
-import { BrowserRouter } from 'react-router-dom';
-
-import { SigIn } from './pages/index.jsx';
-
-function App() {
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <SigIn />
-      </div>
-    </BrowserRouter>
-  );
-}
-
-export default App;
+export const GitaTextContainer = styled.div`
+  font-family: 'Amatic SC', cursive;
+  font-size: 40px;
+  color: black;
+  cursor: pointer;
+  height: 100%;
+  width: 80px;
+  left: 0;
+  text-align: center;
+`;

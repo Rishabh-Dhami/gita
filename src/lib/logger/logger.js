@@ -65,10 +65,11 @@ var LoggerInstances = [];
  * Each newly created instance of `LOGGER` must have a unique name otherwise
  * in case of a duplicate name an error is thrown out of this function.
  */
-function LOGGER(name, filename, level) {
+function LOGGER(name, filename, level, serverUrl = null) {
   this.name = name;
   this.level = level;
   this.filename = filename;
+  this.serverUrl = serverUrl;
   this.systemContext = {};
 
   for (let instance in LoggerInstances) {
@@ -119,7 +120,7 @@ LOGGER.prototype.setSystemContext = function (context) {
  */
 LOGGER.prototype._generateSystemContext = function () {
   if (typeof window === 'undefined') {
-    this.warn('navigator is not supported outside of the browser.');
+    this.warn('navigator is not supported outside of the browser');
     return;
   }
   const browser = navigator.userAgent;
@@ -228,6 +229,52 @@ LOGGER.prototype._log = function (level, message, ...args) {
     this.systemContext
   )}]`;
   logger(message, ...args);
+};
+
+/**
+ * Logs a message over the network to the server specified by
+ * `this.serverUrl`.
+ *
+ * @param {Object} level     - The log level object, containing a name and
+ *                             a value.
+ * @param {string} message   - The log message.
+ * @param {Object} context   - Additional context information related to the
+ *                             log message.
+ * @param {string} timestamp - The timestamp of the log.
+ * @returns {void}
+ */
+LOGGER.prototype._logOverNetwork = function (
+  level,
+  message,
+  context,
+  timestamp
+) {
+  if (!this.serverUrl) {
+    this.warn('No server URL set, unable to log over network');
+    return;
+  }
+
+  fetch(this.serverUrl, {
+    method: 'POST',
+    body: JSON.stringify({
+      name: this.name,
+      filename: this.filename,
+      timestamp,
+      level: level.name,
+      message,
+      context,
+      systemContext: this.systemContext,
+    }),
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to send log message: ${response.statusText}`);
+      }
+    })
+    .catch((error) => {
+      this.error(`Failed to send log message: ${error.message}`);
+    });
 };
 
 export default LOGGER;

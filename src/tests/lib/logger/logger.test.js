@@ -139,3 +139,49 @@ describe('LOGGER.TRACE', () => {
     });
   });
 });
+
+describe('LOGGER.setLevel', () => {
+  const logger = new LOGGER('LOGGER', 'logger.test.js', LOGGER.OFF);
+
+  describe('LOGGER.setLevel(LOGGER.TRACE)', () => {
+    it('should set log level correctly', () => {
+      logger.setLevel(LOGGER.TRACE);
+      expect(logger.level).toBe(LOGGER.TRACE);
+    });
+  });
+
+  describe('LOGGER.setLevel(LOGGER.INFO)', () => {
+    it('should set log level correctly', () => {
+      logger.setLevel(LOGGER.INFO);
+      expect(logger.level).toBe(LOGGER.INFO);
+    });
+  });
+
+  describe('LOGGER.setLevel(LOGGER.DEBUG)', () => {
+    it('should set log level correctly', () => {
+      logger.setLevel(LOGGER.DEBUG);
+      expect(logger.level).toBe(LOGGER.DEBUG);
+    });
+  });
+
+  describe('LOGGER.setLevel(LOGGER.WARN)', () => {
+    it('should set log level correctly', () => {
+      logger.setLevel(LOGGER.WARN);
+      expect(logger.level).toBe(LOGGER.WARN);
+    });
+  });
+
+  describe('LOGGER.setLevel(LOGGER.ERROR)', () => {
+    it('should set log level correctly', () => {
+      logger.setLevel(LOGGER.ERROR);
+      expect(logger.level).toBe(LOGGER.ERROR);
+    });
+  });
+
+  describe('LOGGER.setLevel(LOGGER.OFF)', () => {
+    it('should set log level correctly', () => {
+      logger.setLevel(LOGGER.OFF);
+      expect(logger.level).toBe(LOGGER.OFF);
+    });
+  });
+});

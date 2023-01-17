@@ -69,6 +69,7 @@ function LOGGER(name, filename, level) {
   this.name = name;
   this.level = level;
   this.filename = filename;
+  this.systemContext = {};
 
   for (let instance in LoggerInstances) {
     if (instance.name === this.name) {
@@ -95,6 +96,39 @@ LOGGER.prototype.setLevel = function (level) {
   } else {
     this.level = level;
   }
+};
+
+/**
+ * Add the context to the LOGGER's context variable.
+ *
+ * @param {Object} context Context to add to the context variable.
+ * @returns {void}
+ */
+LOGGER.prototype.setSystemContext = function (context) {
+  this.systemContext = { ...this.systemContext, ...context };
+};
+
+/**
+ * Generate system information and add it to the context variable.
+ *
+ * @function _generateSystemContext() Generates system information and add it
+ * to the context variable. The context variable is an object that contains
+ * additional information about the system where the log messages are generated.
+ *
+ * @returns {void}
+ */
+LOGGER.prototype._generateSystemContext = function () {
+  if (typeof window === 'undefined') {
+    this.warn('navigator is not supported outside of the browser.');
+    return;
+  }
+  const browser = navigator.userAgent;
+  const os = navigator.platform;
+  const screenResolution = {
+    width: `${screen.width}px`,
+    height: `${screen.height}px`,
+  };
+  this.systemContext = { ...this.systemContext, browser, os, screenResolution };
 };
 
 /**
@@ -187,15 +221,13 @@ LOGGER.prototype._log = function (level, message, ...args) {
   if (context) {
     delete args.context;
   }
-
-  if (message) {
-    message = `[${this.filename}]::[${this.name}]::[${level.name}]: ${message}`;
-    logger(message, ...args);
-  }
-  if (context) {
-    message = `[${this.filename}]::[${this.name}]::[${level.name}]: Context\n`;
-    logger(message, context);
-  }
+  const timestamp = new Date().toISOString();
+  message = `[${this.name}] [${this.filename}] [${timestamp}] [${
+    level.name
+  }] [${message}] [${JSON.stringify(context)}] [${JSON.stringify(
+    this.systemContext
+  )}]`;
+  logger(message, ...args);
 };
 
 export default LOGGER;

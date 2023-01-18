@@ -14,22 +14,38 @@
 
 import styled from 'styled-components';
 
-export const NavbarContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
+export const Button = styled.button`
   background-color: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  outline: none;
+  font-size: 16px;
+  padding: 0px 20px;
+  border: none;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  box-shadow: 0px -5px 20px #888888;
-  box-sizing: border-box;
-  z-index: 1;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+  height: content-fit;
 
-  > div {
-    position: relative;
+  transition: all 0.2s ease-in-out;
+  &:active {
+    transform: translateY(2px);
+    box-shadow: none;
   }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    padding: 0px 16px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    padding: 0px 12px;
+  }
+`;
+
+export const GoogleLogo = styled.img`
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 `;

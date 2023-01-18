@@ -16,12 +16,48 @@ import React from 'react';
 
 import { Navbar } from '../../components/index.jsx';
 
-import { SignInContainer } from './styles/styles.jsx';
+import { GoogleSignInButton } from '../../components/index.jsx';
+
+import {
+  SignInForm,
+  SignInHeader,
+  SignInContainer,
+  SignInMainContainer,
+  SignInFormMainContainer,
+  SignInWithEmailContainer,
+  SignInWithGoogleContainer,
+} from './styles/styles.jsx';
+
+function SignInFormContainer() {
+  return (
+    <SignInMainContainer>
+      <SignInHeader>
+        <div>
+          <div>
+            <p>
+              <strong>Sign in</strong>
+            </p>
+            <p>Access your Gita account</p>
+          </div>
+        </div>
+      </SignInHeader>
+      <SignInFormMainContainer>
+        <SignInForm>
+          <SignInWithGoogleContainer>
+            <GoogleSignInButton />
+          </SignInWithGoogleContainer>
+          <SignInWithEmailContainer></SignInWithEmailContainer>
+        </SignInForm>
+      </SignInFormMainContainer>
+    </SignInMainContainer>
+  );
+}
 
 function SignIn() {
   return (
     <SignInContainer>
-      <Navbar></Navbar>
+      <Navbar />
+      <SignInFormContainer />
     </SignInContainer>
   );
 }

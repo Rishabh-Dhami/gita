@@ -17,3 +17,4 @@ export { SearchBox } from './search-box/index.jsx';
 export { default as Navbar } from './navabar/index.jsx';
 export { default as GitaText } from './gita-text/index.jsx';
 export { default as GitaGlobalStyle } from './normalize/index.jsx';
+export { default as GoogleSignInButton } from './google-sign-in-button/index.jsx';

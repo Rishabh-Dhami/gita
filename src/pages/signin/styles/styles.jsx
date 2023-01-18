@@ -18,4 +18,66 @@ export const SignInContainer = styled.div`
   background-color: #e6e6e6;
   width: 100%;
   height: 100vh;
+  overflow: auto;
 `;
+
+export const SignInMainContainer = styled.div`
+  position: relative;
+  margin-top: 50px;
+  box-sizing: border-box;
+`;
+
+export const SignInHeader = styled.div`
+  height: 200px;
+  background-color: #ffffff;
+  width: 100%;
+
+  > div {
+    width: 80%;
+    height: 100%;
+    display: block;
+    margin: auto;
+
+    > div {
+      width: 100%;
+      height: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      strong {
+        font-size: 60px;
+        font-weight: normal;
+      }
+
+      p {
+        font-family: 'Roboto', sans-serif;
+      }
+    }
+  }
+`;
+
+export const SignInFormMainContainer = styled.div`
+  position: absolute;
+  top: 160px;
+  width: 100%;
+  height: content-fit;
+  display: block;
+`;
+
+export const SignInForm = styled.div`
+  background-color: #ffffff;
+  width: 60%;
+  height: 500px;
+  display: block;
+  margin: auto;
+  padding: 40px 0;
+`;
+
+export const SignInWithGoogleContainer = styled.div`
+  width: 90%;
+  display: block;
+  margin: 30px auto;
+`;
+
+export const SignInWithEmailContainer = styled.div``;

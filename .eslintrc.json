@@ -5,6 +5,8 @@
     "valid-jsdoc": "off",
     "object-curly-spacing": "off",
     "indent": "off",
-    "quotes": "off"
+    "quotes": "off",
+    "max-len": "off",
+    "space-before-function-paren": "off"
   }
 }

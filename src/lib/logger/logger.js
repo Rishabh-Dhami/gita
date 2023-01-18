@@ -58,7 +58,7 @@ const defineLogLevel = (level) => {
 };
 
 // List of all the `LOGGER` instances that gets created throughout the program.
-var LoggerInstances = [];
+const LoggerInstances = [];
 
 /**
  * Creates an instance for logging with the given name and logging level.
@@ -72,7 +72,7 @@ function LOGGER(name, filename, level, serverUrl = null) {
   this.serverUrl = serverUrl;
   this.systemContext = {};
 
-  for (let instance in LoggerInstances) {
+  for (const instance in LoggerInstances) {
     if (instance.name === this.name) {
       throw Error(`${this.name} is already in use.`);
     }
@@ -207,8 +207,8 @@ LOGGER.prototype._log = function (level, message, ...args) {
       return o;
     }
 
-    let copy = o.constructor();
-    for (let attr in o) {
+    const copy = o.constructor();
+    for (const attr in o) {
       // Only copy the object's own property - not something that is
       // inherited.
       if (o.hasOwnProperty(attr)) {

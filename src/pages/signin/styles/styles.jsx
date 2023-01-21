@@ -67,7 +67,7 @@ export const SignInFormMainContainer = styled.div`
 
 export const SignInForm = styled.div`
   background-color: #ffffff;
-  width: 60%;
+  width: 50%;
   height: 500px;
   display: block;
   margin: auto;
@@ -75,9 +75,16 @@ export const SignInForm = styled.div`
 `;
 
 export const SignInWithGoogleContainer = styled.div`
-  width: 90%;
+  width: 80%;
   display: block;
   margin: 30px auto;
 `;
 
-export const SignInWithEmailContainer = styled.div``;
+export const SignInWithEmailContainer = styled.div`
+  width: 80%;
+  margin: auto;
+
+  > div {
+    width: 80%;
+  }
+`;

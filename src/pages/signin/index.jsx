@@ -16,7 +16,10 @@ import React from 'react';
 
 import { Navbar } from '../../components/index.jsx';
 
-import { GoogleSignInButton } from '../../components/index.jsx';
+import {
+  SignInForm as SignInWithEmailForm,
+  GoogleSignInButton,
+} from '../../components/index.jsx';
 
 import {
   SignInForm,
@@ -46,7 +49,11 @@ function SignInFormContainer() {
           <SignInWithGoogleContainer>
             <GoogleSignInButton />
           </SignInWithGoogleContainer>
-          <SignInWithEmailContainer></SignInWithEmailContainer>
+          <SignInWithEmailContainer>
+            <div>
+              <SignInWithEmailForm />
+            </div>
+          </SignInWithEmailContainer>
         </SignInForm>
       </SignInFormMainContainer>
     </SignInMainContainer>

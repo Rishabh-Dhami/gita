@@ -22,7 +22,7 @@ function GitaText() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/home');
+    navigate('/');
   };
 
   return <GitaTextContainer onClick={handleClick}>Gita</GitaTextContainer>;

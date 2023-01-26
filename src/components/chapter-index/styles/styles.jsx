@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export { SearchBox } from './search-box/index.jsx';
+import styled from 'styled-components';
 
-export { default as Navbar } from './navabar/index.jsx';
-export { default as GitaText } from './gita-text/index.jsx';
-export { default as SignInForm } from './sign-in-form/index.jsx';
-export { default as ChapterIndex } from './chapter-index/index.jsx';
-export { default as GitaGlobalStyle } from './normalize/index.jsx';
-export { default as GoogleSignInButton } from './google-sign-in-button/index.jsx';
+export const ChapterIndexContainer = styled.div`
+  width: 100%;
+  max-width: 250px;
+  height: 100%;
+  position: fixed;
+  background-color: #ffffff;
+`;
+
+export const ChapterIndexFilterContainer = styled.div`
+  padding: 12px;
+`;
+
+export const ChaptersContainer = styled.ul``;

@@ -60,6 +60,7 @@ export const OnThisPageContainer = styled.div`
 `;
 
 export const UserActionContainer = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   gap: 10px;

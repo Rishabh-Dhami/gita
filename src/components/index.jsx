@@ -19,4 +19,5 @@ export { default as GitaText } from './gita-text/index.jsx';
 export { default as SignInForm } from './sign-in-form/index.jsx';
 export { default as ChapterIndex } from './chapter-index/index.jsx';
 export { default as GitaGlobalStyle } from './normalize/index.jsx';
+export { default as LanguageSelector } from './language-selector/index.jsx';
 export { default as GoogleSignInButton } from './google-sign-in-button/index.jsx';

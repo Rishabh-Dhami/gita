@@ -12,10 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Navbar, ChapterIndex, SearchBox } from '../../components/index.jsx';
+import {
+  Navbar,
+  SearchBox,
+  ChapterIndex,
+  LanguageSelector,
+} from '../../components/index.jsx';
 
 import {
   Container,
@@ -38,6 +43,24 @@ function SignIn() {
 }
 
 function UserAction() {
+  const loadLanguageSelector = () => {
+    const [language, setLanguage] = useState('en');
+    const languages = [
+      { code: 'en', label: 'English' },
+      { code: 'es', label: 'Español' },
+      { code: 'fr', label: 'Français' },
+      { code: 'de', label: 'Deutsch' },
+    ];
+
+    return (
+      <LanguageSelector
+        language={language}
+        setLanguage={setLanguage}
+        languages={languages}
+      />
+    );
+  };
+
   return (
     <UserActionContainer>
       <SearchBox
@@ -51,6 +74,7 @@ function UserAction() {
         inputBorderColor="#f1f3f4"
         inputFontSize="16px"
       />
+      {loadLanguageSelector()}
       <SignIn />
     </UserActionContainer>
   );

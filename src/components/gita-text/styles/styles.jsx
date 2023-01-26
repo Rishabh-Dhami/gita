@@ -23,4 +23,5 @@ export const GitaTextContainer = styled.div`
   width: 80px;
   left: 0;
   text-align: center;
+  position: relative;
 `;

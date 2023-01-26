@@ -58,3 +58,10 @@ export const OnThisPageContainer = styled.div`
     position: absolute;
   }
 `;
+
+export const UserActionContainer = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+`;

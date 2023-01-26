@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Navbar, ChapterIndex } from '../../components/index.jsx';
+import { Navbar, ChapterIndex, SearchBox } from '../../components/index.jsx';
 
 import {
   Container,
@@ -22,12 +23,43 @@ import {
   BookContainer,
   ChapterContainer,
   OnThisPageContainer,
+  UserActionContainer,
 } from './styles/styles.jsx';
+import { SignInButton } from '../../components/sign-in-form/styles/styles.jsx';
+
+function SignIn() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/signin');
+  };
+
+  return <SignInButton onClick={handleClick}>Sign In</SignInButton>;
+}
+
+function UserAction() {
+  return (
+    <UserActionContainer>
+      <SearchBox
+        placeholder="Search"
+        name="Filter Chapter"
+        data={[]}
+        fuseConfigs={{}}
+        autoFocus={false}
+        onSelect={(record) => record}
+        inputBackgroundColor="#f1f3f4"
+        inputBorderColor="#f1f3f4"
+        inputFontSize="16px"
+      />
+      <SignIn />
+    </UserActionContainer>
+  );
+}
 
 function Book() {
   return (
     <Container>
-      <Navbar />
+      <Navbar rightChild={<UserAction />} />
       <BookContainer>
         <MenuContainer>
           <ChapterIndex />

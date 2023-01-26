@@ -15,7 +15,7 @@
 import styled from 'styled-components';
 
 export const SignInContainer = styled.div`
-  background-color: #e6e6e6;
+  background-color: #f1f3f4;
   width: 100%;
   height: 100vh;
   overflow: auto;

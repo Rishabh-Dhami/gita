@@ -14,19 +14,29 @@
 
 import React from 'react';
 
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Navbar, ChapterIndex } from '../../components/index.jsx';
 
-import { Book, SignIn } from './pages/index.jsx';
+import {
+  Container,
+  MenuContainer,
+  BookContainer,
+  ChapterContainer,
+  OnThisPageContainer,
+} from './styles/styles.jsx';
 
-function App() {
+function Book() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route exact path="/" element={<Book />} />
-        <Route path="/signin" element={<SignIn />} />
-      </Routes>
-    </BrowserRouter>
+    <Container>
+      <Navbar />
+      <BookContainer>
+        <MenuContainer>
+          <ChapterIndex />
+        </MenuContainer>
+        <ChapterContainer></ChapterContainer>
+        <OnThisPageContainer></OnThisPageContainer>
+      </BookContainer>
+    </Container>
   );
 }
 
-export default App;
+export default Book;

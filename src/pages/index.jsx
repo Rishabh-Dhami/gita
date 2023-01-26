@@ -12,4 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export { default as SigIn } from './signin/index.jsx';
+export { default as Book } from './book/index.jsx';
+export { default as SignIn } from './signin/index.jsx';

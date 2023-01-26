@@ -19,7 +19,7 @@ import { getFileName } from '../../lib/utils/fs.js';
 
 import { GitaText } from '../index.jsx';
 
-import { NavbarContainer } from './styles/styles.jsx';
+import { NavbarContainer, RightChildContainer } from './styles/styles.jsx';
 
 function Navbar({ rightChild, debug = false }) {
   const context = { rightChild };
@@ -33,7 +33,7 @@ function Navbar({ rightChild, debug = false }) {
   return (
     <NavbarContainer>
       {<GitaText />}
-      {rightChild && <div>{rightChild}</div>}
+      {rightChild && <RightChildContainer>{rightChild}</RightChildContainer>}
     </NavbarContainer>
   );
 }

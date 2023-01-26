@@ -22,14 +22,16 @@ export const NavbarContainer = styled.div`
   height: 50px;
   background-color: #ffffff;
   display: flex;
+  gap: 10px;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
   box-shadow: 0px -5px 20px #888888;
   box-sizing: border-box;
   z-index: 1;
+`;
 
-  > div {
-    position: relative;
-  }
+export const RightChildContainer = styled.div`
+  width: 100%;
+  max-width: 800px;
 `;

@@ -14,9 +14,12 @@
 
 import styled from 'styled-components';
 
+import { BACKGROUND } from '../../../constants/styles/colors.js';
+
 export const Container = styled.div`
-  background-color: #f1f3f4;
+  background-color: ${BACKGROUND.primary};
   overflow-x: hidden;
+  height: fit-content;
 `;
 
 export const BookContainer = styled.div`
@@ -24,6 +27,7 @@ export const BookContainer = styled.div`
   width: 100vw;
   position: relative;
   margin-top: 50px;
+  height: fit-content;
 `;
 
 export const MenuContainer = styled.div`
@@ -44,6 +48,7 @@ export const ChapterContainer = styled.div`
   height: 100vh;
   display: block;
   margin: auto;
+  padding: 5px 18px;
 `;
 
 export const OnThisPageContainer = styled.div`

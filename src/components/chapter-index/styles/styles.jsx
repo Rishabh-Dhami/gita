@@ -14,12 +14,14 @@
 
 import styled from 'styled-components';
 
+import { BACKGROUND } from '../../../constants/styles/colors.js';
+
 export const ChapterIndexContainer = styled.div`
   width: 100%;
   max-width: 250px;
   height: 100%;
   position: fixed;
-  background-color: #ffffff;
+  background-color: ${BACKGROUND.primaryWhite};
 `;
 
 export const ChapterIndexFilterContainer = styled.div`

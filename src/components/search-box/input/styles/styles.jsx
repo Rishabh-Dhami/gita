@@ -14,6 +14,8 @@
 
 import styled from 'styled-components';
 
+import { BACKGROUND } from '../../../../constants/styles/colors.js';
+
 export const StyledInput = styled.input`
   font-size: ${({ inputFontSize }) => inputFontSize};
   padding: ${({ leftIcon, iconBoxSize }) =>
@@ -27,7 +29,7 @@ export const StyledInput = styled.input`
 
   &:focus {
     outline: none;
-    background-color: #ffffff;
+    background-color: ${BACKGROUND.primaryWhite};
     box-shadow: 0px 1px 2px #888888;
   }
 `;

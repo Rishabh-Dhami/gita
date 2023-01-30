@@ -14,40 +14,44 @@
 
 import styled from 'styled-components';
 
-import { BACKGROUND } from '../../../constants/styles/colors.js';
+import { BACKGROUND, BORDER } from '../../../constants/styles/colors.js';
 
-export const Button = styled.button`
-  background-color: ${BACKGROUND.primaryWhite};
-  color: #000000;
-  cursor: pointer;
-  outline: none;
-  font-size: 16px;
-  padding: 0px 20px;
-  border: none;
+export const AddTextCellContainer = styled.div`
+  position: relative;
   display: flex;
+  width: 100%;
+  height: 20px;
+  background: ${BACKGROUND.transparent};
+  margin: 5px 0;
+`;
+
+export const AddTextCellInnerBar = styled.hr`
+  border-top: none;
+  border-bottom: 1px solid ${BORDER.primary};
+  position: absolute;
+  width: 100%;
+`;
+
+export const AddTextCellButton = styled.button`
+  outline: none;
+  border: none;
+  background-color: ${BACKGROUND.buttonPrimary};
+  color: black;
+  width: 100%;
+  max-width: 70px;
+  height: 20px;
+  margin: auto;
+  text-align: right;
+  padding: 0 12px;
+  z-index: 0;
+  display: flex;
+  gap: 10px;
   align-items: center;
-  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
-  height: content-fit;
+  cursor: pointer;
+  font-size: 16px;
 
   transition: all 0.2s ease-in-out;
   &:active {
     transform: translateY(2px);
-    box-shadow: none;
   }
-
-  @media (max-width: 768px) {
-    font-size: 14px;
-    padding: 0px 16px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 12px;
-    padding: 0px 12px;
-  }
-`;
-
-export const GoogleLogo = styled.img`
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
 `;

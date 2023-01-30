@@ -14,6 +14,8 @@
 
 import styled from 'styled-components';
 
+import { BACKGROUND, COLOR } from '../../../constants/styles/colors.js';
+
 export const Form = styled.form`
   display: flex;
   height: 200px;
@@ -68,8 +70,8 @@ export const SignInButton = styled.button`
   max-width: 80px;
   height: 40px;
   text-align: center;
-  color: #ffffff;
-  background-color: #007bff;
+  color: ${COLOR.secondary};
+  background-color: ${BACKGROUND.buttonSecondary};
   position: relative;
   flex: 0 0 20%;
   cursor: pointer;

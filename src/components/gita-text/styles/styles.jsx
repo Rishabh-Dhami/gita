@@ -14,10 +14,12 @@
 
 import styled from 'styled-components';
 
+import { COLOR } from '../../../constants/styles/colors.js';
+
 export const GitaTextContainer = styled.div`
   font-family: 'Amatic SC', cursive;
   font-size: 40px;
-  color: black;
+  color: ${COLOR.primary};
   cursor: pointer;
   height: 100%;
   width: 80px;

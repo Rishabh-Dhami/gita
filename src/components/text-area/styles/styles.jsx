@@ -11,29 +11,3 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-import styled from 'styled-components';
-
-import { BACKGROUND } from '../../../constants/styles/colors.js';
-
-export const NavbarContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  background-color: ${BACKGROUND.primaryWhite};
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  box-shadow: 0px -5px 20px #888888;
-  box-sizing: border-box;
-  z-index: 1;
-`;
-
-export const RightChildContainer = styled.div`
-  width: 100%;
-  max-width: 800px;
-`;

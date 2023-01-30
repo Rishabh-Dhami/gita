@@ -14,9 +14,11 @@
 
 import styled from 'styled-components';
 
+import { BACKGROUND } from '../../../../constants/styles/colors.js';
+
 export const StyledDropdown = styled.div`
   margin: 10px 0 0;
-  background-color: #fff;
+  background-color: ${BACKGROUND.primaryWhite};
   box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 0, rgba(0, 0, 0, 0.1) 0px 4px 11px;
   border-radius: 5px;
 
@@ -27,7 +29,7 @@ export const StyledDropdown = styled.div`
 
     > li {
       padding: 10px 20px;
-      background-color: #fff;
+      background-color: ${BACKGROUND.primaryWhite};
       border: 1px solid ${({ dropdownBorderColor }) => dropdownBorderColor};
       height: 40px;
       display: flex;

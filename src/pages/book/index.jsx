@@ -15,9 +15,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   Navbar,
   SearchBox,
+  TextEditor,
+  AddTextCell,
   ChapterIndex,
   LanguageSelector,
 } from '../../components/index.jsx';
@@ -81,6 +85,23 @@ function UserAction() {
 }
 
 function Book() {
+  const [textEditors, setTextEditors] = useState([]);
+  const [textEditorsVisibility, setTextEditorsVisibility] = useState(false);
+
+  const renderTextEditor = () => {
+    return (
+      <React.Fragment key={uuidv4()}>
+        <TextEditor />
+        <AddTextCell onAddTextCell={onAddTextCell} />
+      </React.Fragment>
+    );
+  };
+
+  const onAddTextCell = () => {
+    setTextEditors([...textEditors, renderTextEditor]);
+    setTextEditorsVisibility(true);
+  };
+
   return (
     <Container>
       <Navbar rightChild={<UserAction />} />
@@ -88,7 +109,10 @@ function Book() {
         <MenuContainer>
           <ChapterIndex />
         </MenuContainer>
-        <ChapterContainer></ChapterContainer>
+        <ChapterContainer>
+          <AddTextCell id={uuidv4()} onAddTextCell={onAddTextCell} />
+          {textEditorsVisibility && textEditors.map((editor) => editor())}
+        </ChapterContainer>
         <OnThisPageContainer></OnThisPageContainer>
       </BookContainer>
     </Container>

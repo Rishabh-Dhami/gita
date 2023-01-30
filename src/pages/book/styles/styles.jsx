@@ -45,9 +45,9 @@ export const MenuContainer = styled.div`
 export const ChapterContainer = styled.div`
   width: 100%;
   max-width: 2000px;
-  height: 100vh;
+  height: 100%;
   display: block;
-  margin: auto;
+  margin: 0 auto;
   padding: 5px 18px;
 `;
 

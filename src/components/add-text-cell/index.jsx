@@ -15,6 +15,8 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   AddTextCellButton,
   AddTextCellInnerBar,
@@ -24,32 +26,27 @@ import {
 function AddTextCell({ onAddTextCell }) {
   const [isVisible, setIsVisible] = useState(false);
 
+  const textCellID = uuidv4();
   useEffect(() => {
     const handleMouseEnter = () => setIsVisible(true);
     const handleMouseLeave = () => setIsVisible(false);
 
-    const addTextCellContainers = document.querySelectorAll(
-      '.add-text-cell-toolbar-container'
+    const addTextCellContainer = document.querySelector(
+      `.add-text-cell-toolbar-container-${textCellID}`
     );
-    addTextCellContainers.forEach((addTextCellContainer) =>
-      addTextCellContainer.addEventListener('mouseenter', handleMouseEnter)
-    );
-    addTextCellContainers.forEach((addTextCellContainer) =>
-      addTextCellContainer.addEventListener('mouseleave', handleMouseLeave)
-    );
+    addTextCellContainer.addEventListener('mouseenter', handleMouseEnter);
+    addTextCellContainer.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      addTextCellContainers.forEach((addTextCellContainer) =>
-        addTextCellContainer.removeEventListener('mouseenter', handleMouseEnter)
-      );
-      addTextCellContainers.forEach((addTextCellContainer) =>
-        addTextCellContainer.removeEventListener('mouseleave', handleMouseLeave)
-      );
+      addTextCellContainer.removeEventListener('mouseenter', handleMouseEnter);
+      addTextCellContainer.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
 
   return (
-    <AddTextCellContainer className="add-text-cell-toolbar-container">
+    <AddTextCellContainer
+      className={`add-text-cell-toolbar-container-${textCellID}`}
+    >
       {isVisible && (
         <>
           <AddTextCellInnerBar />

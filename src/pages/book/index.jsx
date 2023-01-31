@@ -110,7 +110,7 @@ function Book() {
           <ChapterIndex />
         </MenuContainer>
         <ChapterContainer>
-          <AddTextCell id={uuidv4()} onAddTextCell={onAddTextCell} />
+          <AddTextCell onAddTextCell={onAddTextCell} />
           {textEditorsVisibility && textEditors.map((editor) => editor())}
         </ChapterContainer>
         <OnThisPageContainer></OnThisPageContainer>

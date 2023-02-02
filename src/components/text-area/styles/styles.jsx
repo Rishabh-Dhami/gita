@@ -11,3 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+import styled from 'styled-components';
+
+import { AiFillCloseCircle } from 'react-icons/ai';
+
+import { COLOR } from '../../../constants/styles/colors.js';
+
+export const TextAreaContainer = styled.div`
+  position: relative;
+`;
+
+export const CustomAiFillCloseCircle = styled(AiFillCloseCircle)`
+  position: absolute;
+  top: 10px;
+  right: 13px;
+  z-index: 999;
+  color: ${COLOR.iconsPrimary};
+  cursor: pointer;
+
+  &:hover {
+    color: ${COLOR.primary};
+  }
+`;

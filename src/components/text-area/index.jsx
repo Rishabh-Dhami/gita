@@ -19,18 +19,29 @@ import Editor, { Plugins } from 'react-markdown-editor-lite';
 
 import 'react-markdown-editor-lite/lib/index.css';
 
+import {
+  TextAreaContainer,
+  CustomAiFillCloseCircle,
+} from './styles/styles.jsx';
+
 const mdParser = new MarkdownIt();
 
 Editor.use(Plugins.AutoResize, { min: 40 });
 Editor.unuse(Plugins.ModeToggle);
+Editor.unuse(Plugins.FullScreen);
 
-function TextEditor() {
+function TextEditor({ onCloseTextEditor }) {
   return (
-    <Editor
-      renderHTML={(text) => mdParser.render(text)}
-      onChange={({ html, text }) => console.log(html, text)}
-      view={{ md: true, menu: true, html: false }}
-    />
+    <TextAreaContainer>
+      <CustomAiFillCloseCircle onClick={onCloseTextEditor} />
+      <Editor
+        onFocus={(e) => console.log(e)}
+        onBlur={(e) => console.log(e)}
+        renderHTML={(text) => mdParser.render(text)}
+        onChange={({ html, text }) => console.log(html, text)}
+        view={{ md: true, menu: true, html: false }}
+      />
+    </TextAreaContainer>
   );
 }
 

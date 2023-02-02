@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = { primary: '#000000', secondary: '#ffffff' };
+export const COLOR = {
+  primary: '#000000',
+  secondary: '#ffffff',
+  iconsPrimary: '#757575',
+};
 
 export const BORDER = { primary: 'darkgrey', secondary: '#f1f3f4' };
 

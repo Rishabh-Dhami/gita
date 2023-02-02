@@ -15,6 +15,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import LOGGER from '../../lib/logger/logger.js';
+import { getFileName } from '../../lib/utils/fs.js';
+
 import {
   Navbar,
   SearchBox,
@@ -82,11 +85,22 @@ function UserAction() {
   );
 }
 
-function Book() {
+function Book({ debug = true }) {
   const [textEditorCount, setTextEditorCount] = useState(0);
+
+  const logger = new LOGGER(
+    Book.name,
+    getFileName(import.meta.url),
+    debug === true ? LOGGER.DEBUG : LOGGER.OFF
+  );
 
   const handleAddTextCell = () => {
     setTextEditorCount(textEditorCount + 1);
+  };
+  const handleCloseTextEditor = (index) => {
+    const context = { index };
+    logger.debug(null, context);
+    setTextEditorCount(textEditorCount - 1);
   };
 
   return (
@@ -100,7 +114,9 @@ function Book() {
           <AddTextCell onAddTextCell={handleAddTextCell} />
           {Array.from({ length: textEditorCount }, (_, index) => (
             <React.Fragment key={index}>
-              <TextEditor />
+              <TextEditor
+                onCloseTextEditor={() => handleCloseTextEditor(index)}
+              />
               <AddTextCell onAddTextCell={handleAddTextCell} />
             </React.Fragment>
           ))}

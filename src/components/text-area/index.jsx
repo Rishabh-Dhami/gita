@@ -21,14 +21,15 @@ import 'react-markdown-editor-lite/lib/index.css';
 
 const mdParser = new MarkdownIt();
 
-function TextEditor() {
-  Editor.use(Plugins.AutoResize, { min: 40 });
+Editor.use(Plugins.AutoResize, { min: 40 });
+Editor.unuse(Plugins.ModeToggle);
 
+function TextEditor() {
   return (
     <Editor
       renderHTML={(text) => mdParser.render(text)}
       onChange={({ html, text }) => console.log(html, text)}
-      view={{ md: true, menu: true, html: true }}
+      view={{ md: true, menu: true, html: false }}
     />
   );
 }

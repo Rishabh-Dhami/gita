@@ -15,8 +15,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { v4 as uuidv4 } from 'uuid';
-
 import {
   Navbar,
   SearchBox,
@@ -85,21 +83,10 @@ function UserAction() {
 }
 
 function Book() {
-  const [textEditors, setTextEditors] = useState([]);
-  const [textEditorsVisibility, setTextEditorsVisibility] = useState(false);
+  const [textEditorCount, setTextEditorCount] = useState(0);
 
-  const renderTextEditor = () => {
-    return (
-      <React.Fragment key={uuidv4()}>
-        <TextEditor />
-        <AddTextCell onAddTextCell={onAddTextCell} />
-      </React.Fragment>
-    );
-  };
-
-  const onAddTextCell = () => {
-    setTextEditors([...textEditors, renderTextEditor]);
-    setTextEditorsVisibility(true);
+  const handleAddTextCell = () => {
+    setTextEditorCount(textEditorCount + 1);
   };
 
   return (
@@ -110,8 +97,13 @@ function Book() {
           <ChapterIndex />
         </MenuContainer>
         <ChapterContainer>
-          <AddTextCell onAddTextCell={onAddTextCell} />
-          {textEditorsVisibility && textEditors.map((editor) => editor())}
+          <AddTextCell onAddTextCell={handleAddTextCell} />
+          {Array.from({ length: textEditorCount }, (_, index) => (
+            <React.Fragment key={index}>
+              <TextEditor />
+              <AddTextCell onAddTextCell={handleAddTextCell} />
+            </React.Fragment>
+          ))}
         </ChapterContainer>
         <OnThisPageContainer></OnThisPageContainer>
       </BookContainer>

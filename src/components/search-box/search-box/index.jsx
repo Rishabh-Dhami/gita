@@ -20,8 +20,6 @@ import Fuse from 'fuse.js';
 import LOGGER from '../../../lib/logger/logger.js';
 import useOutsideClick from '../hooks/useOutisdeClick.js';
 
-import { getFileName } from '../../../lib/utils/fs.js';
-
 import { Input, Dropdown } from '../index.jsx';
 import { StyledContainer } from './styles/styles.jsx';
 
@@ -112,7 +110,6 @@ function SearchBox({
   };
   const logger = new LOGGER(
     SearchBox.name,
-    getFileName(import.meta.url),
     debug === true ? LOGGER.DEBUG : LOGGER.OFF
   );
   logger.debug(null, context);

@@ -19,5 +19,10 @@
  * @returns {String} Pathname extracted from the base url.
  */
 export function getFileName(base) {
+  /**
+   * @todo Since the test environment is 'node' which does not support the 'import.meta.url'
+   * syntax we need to add compatibility for both the node and the browser environment to
+   * access the file name of the script running.
+   */
   return new URL('', base).pathname;
 }

@@ -16,7 +16,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import LOGGER from '../../lib/logger/logger.js';
-import { getFileName } from '../../lib/utils/fs.js';
 
 import {
   Navbar,
@@ -90,7 +89,6 @@ function Book({ debug = true }) {
 
   const logger = new LOGGER(
     Book.name,
-    getFileName(import.meta.url),
     debug === true ? LOGGER.DEBUG : LOGGER.OFF
   );
 

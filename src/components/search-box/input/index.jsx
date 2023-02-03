@@ -17,8 +17,6 @@ import { useRef, useEffect } from 'react';
 
 import LOGGER from '../../../lib/logger/logger.js';
 
-import { getFileName } from '../../../lib/utils/fs.js';
-
 import {
   StyledInput,
   StyledIconContainer,
@@ -64,7 +62,6 @@ function Input({
   };
   const logger = new LOGGER(
     Input.name,
-    getFileName(import.meta.url),
     debug === true ? LOGGER.DEBUG : LOGGER.OFF
   );
   logger.debug(null, context);

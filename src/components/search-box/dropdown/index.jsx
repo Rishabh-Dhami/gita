@@ -16,8 +16,6 @@ import React from 'react';
 
 import LOGGER from '../../../lib/logger/logger.js';
 
-import { getFileName } from '../../../lib/utils/fs.js';
-
 import { StyledDropdown } from './styles/styles.jsx';
 
 function Dropdown({
@@ -35,7 +33,6 @@ function Dropdown({
   };
   const logger = new LOGGER(
     Dropdown.name,
-    getFileName(import.meta.url),
     debug === true ? LOGGER.DEBUG : LOGGER.OFF
   );
   logger.debug(null, context);

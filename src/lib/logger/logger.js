@@ -65,10 +65,9 @@ const LoggerInstances = [];
  * Each newly created instance of `LOGGER` must have a unique name otherwise
  * in case of a duplicate name an error is thrown out of this function.
  */
-function LOGGER(name, filename, level, serverUrl = null) {
+function LOGGER(name, level, serverUrl = null) {
   this.name = name;
   this.level = level;
-  this.filename = filename;
   this.serverUrl = serverUrl;
   this.systemContext = {};
 
@@ -223,7 +222,7 @@ LOGGER.prototype._log = function (level, message, ...args) {
     delete args.context;
   }
   const timestamp = new Date().toISOString();
-  message = `[${this.name}] [${this.filename}] [${timestamp}] [${
+  message = `[${this.name}] [${timestamp}] [${
     level.name
   }] [${message}] [${JSON.stringify(context)}] [${JSON.stringify(
     this.systemContext
@@ -258,7 +257,6 @@ LOGGER.prototype._logOverNetwork = function (
     method: 'POST',
     body: JSON.stringify({
       name: this.name,
-      filename: this.filename,
       timestamp,
       level: level.name,
       message,

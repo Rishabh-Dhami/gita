@@ -15,7 +15,6 @@
 import React from 'react';
 
 import LOGGER from '../../lib/logger/logger.js';
-import { getFileName } from '../../lib/utils/fs.js';
 
 import { GitaText } from '../index.jsx';
 
@@ -25,7 +24,6 @@ function Navbar({ rightChild, debug = false }) {
   const context = { rightChild };
   const logger = new LOGGER(
     Navbar.name,
-    getFileName(import.meta.url),
     debug === true ? LOGGER.DEBUG : LOGGER.INFO
   );
   logger.debug(null, context);

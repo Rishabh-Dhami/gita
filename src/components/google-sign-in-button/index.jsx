@@ -18,17 +18,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 import LOGGER from '../../lib/logger/logger.js';
-import { getFileName } from '../../lib/utils/fs.js';
 import { firebaseConfig } from '../../firebase/config.js';
 
 import { Button, GoogleLogo } from './styles/styles.jsx';
 
 function GoogleSignInButton({ callback = (result) => result }) {
-  const logger = new LOGGER(
-    GoogleSignInButton.name,
-    getFileName(import.meta.url),
-    LOGGER.INFO
-  );
+  const logger = new LOGGER(GoogleSignInButton.name, LOGGER.INFO);
 
   const handleClick = async () => {
     initializeApp(firebaseConfig);

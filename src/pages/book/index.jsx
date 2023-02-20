@@ -12,8 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { initializeApp } from 'firebase/app';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
+
+import { firebaseConfig } from '../../firebase/config.js';
 
 import LOGGER from '../../lib/logger/logger.js';
 
@@ -47,21 +52,25 @@ function SignIn() {
 }
 
 function UserAction() {
-  const loadLanguageSelector = () => {
-    const [language, setLanguage] = useState('en');
-    const languages = [
-      { code: 'en', label: 'English' },
-      { code: 'hi', label: 'Hindi' },
-    ];
+  initializeApp(firebaseConfig);
 
-    return (
-      <LanguageSelector
-        language={language}
-        setLanguage={setLanguage}
-        languages={languages}
-      />
-    );
-  };
+  const db = getFirestore();
+  const [language, setLanguage] = useState('en');
+  const [languages, setLanguages] = useState([]);
+
+  useEffect(() => {
+    async function getDocuments() {
+      const querySnapshot = await getDocs(
+        collection(db, 'supported_translation_languages')
+      );
+      const languages = [];
+      querySnapshot.forEach((doc) => {
+        languages.push({ ...doc.data()['language'] });
+      });
+      setLanguages(languages);
+    }
+    getDocuments();
+  }, []);
 
   return (
     <UserActionContainer>
@@ -76,7 +85,11 @@ function UserAction() {
         inputBorderColor="#f1f3f4"
         inputFontSize="16px"
       />
-      {loadLanguageSelector()}
+      <LanguageSelector
+        language={language}
+        setLanguage={setLanguage}
+        languages={languages}
+      />
       <SignIn />
     </UserActionContainer>
   );

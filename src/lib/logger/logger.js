@@ -253,21 +253,25 @@ LOGGER.prototype._logOverNetwork = function (
     return;
   }
 
+  const loggerContext = {
+    name: this.name,
+    timestamp,
+    level: level.name,
+    message,
+    context,
+    systemContext: this.systemContext,
+  };
+  this.info(`Sending logger context to ${this.serverUrl}`, {
+    context: loggerContext,
+  });
   fetch(this.serverUrl, {
     method: 'POST',
-    body: JSON.stringify({
-      name: this.name,
-      timestamp,
-      level: level.name,
-      message,
-      context,
-      systemContext: this.systemContext,
-    }),
+    body: JSON.stringify(loggerContext),
     headers: { 'Content-Type': 'application/json' },
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`Failed to send log message: ${response.statusText}`);
+        this.error(`Failed to send log message: ${response.statusText}`);
       }
     })
     .catch((error) => {

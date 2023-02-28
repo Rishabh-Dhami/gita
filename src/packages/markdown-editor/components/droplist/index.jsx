@@ -12,17 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  lightgrey2: '#757575',
-};
+import React from 'react';
 
-export const BORDER = { darkgrey: 'darkgrey', lightgrey1: '#f1f3f4' };
+import { DropWrap } from './styles/styles.jsx';
 
-export const BACKGROUND = {
-  transparent: 'transparent',
-  blue: '#007bff',
-  white: '#ffffff',
-  lightgrey1: '#f1f3f4',
-};
+function DropList({ children, ...props }) {
+  const handleClose = (e) => {
+    e.stopPropagation();
+    const { onClose } = props;
+    typeof onClose === 'function' && onClose();
+  };
+
+  return (
+    <DropWrap visibility={props.visibility} onClick={handleClose}>
+      {children}
+    </DropWrap>
+  );
+}
+
+export default DropList;

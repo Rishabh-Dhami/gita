@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import { BACKGROUND } from '../../../constants/styles/colors.js';
 
 export const Container = styled.div`
-  background-color: ${BACKGROUND.primary};
+  background-color: ${BACKGROUND.lightgrey1};
   overflow-x: hidden;
   height: fit-content;
 `;

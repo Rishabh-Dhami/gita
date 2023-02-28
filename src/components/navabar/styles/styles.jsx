@@ -22,7 +22,7 @@ export const NavbarContainer = styled.div`
   left: 0;
   width: 100%;
   height: 50px;
-  background-color: ${BACKGROUND.primaryWhite};
+  background-color: ${BACKGROUND.white};
   display: flex;
   gap: 10px;
   align-items: center;

@@ -29,7 +29,7 @@ export const StyledInput = styled.input`
 
   &:focus {
     outline: none;
-    background-color: ${BACKGROUND.primaryWhite};
+    background-color: ${BACKGROUND.white};
     box-shadow: 0px 1px 2px #888888;
   }
 `;

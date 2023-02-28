@@ -56,3 +56,48 @@ export function isPromise(o) {
         typeof o.then === 'function'))
   );
 }
+
+export function isKeyMatch(e, conditions) {
+  const event = {
+    keyCode: e.keyCode,
+    ctrlKey: e.ctrlKey,
+    key: e.key,
+    altKey: e.altKey,
+    metaKey: e.metaKey,
+    shiftKey: e.shiftKey,
+  };
+
+  if (conditions?.aliasCommand) event.ctrlKey = event.ctrlKey || event.metaKey;
+  if (conditions?.withKey && conditions?.withKey.length > 0) {
+    for (const it of conditions?.withKey) {
+      if (typeof event[it] !== 'undefined' && !event[it]) return false;
+    }
+  } else if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    return false;
+  }
+  if (event.key) return event.key === conditions?.key;
+  else return event.keyCode === conditions?.keyCode;
+}
+
+export function getLineAndCol(text, position) {
+  const lines = text.split('\n');
+  const beforeLines = text.substr(0, position).split('\n');
+  const lineCount = beforeLines.length;
+  const col = beforeLines[beforeLines.length - 1].length;
+
+  const currentLine = lines[beforeLines.length - 1];
+  const previousLine =
+    beforeLines.length > 1 ? beforeLines[beforeLines.length - 1] : null;
+  const nextLine =
+    lines.length > beforeLines.length ? lines[beforeLines.length] : null;
+
+  return {
+    lineCount,
+    col,
+    currentLine,
+    previousLine,
+    nextLine,
+    beforeText: text.substr(0, position),
+    afterText: text.substr(position),
+  };
+}

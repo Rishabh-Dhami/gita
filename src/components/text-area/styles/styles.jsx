@@ -27,10 +27,10 @@ export const CustomAiFillCloseCircle = styled(AiFillCloseCircle)`
   top: 10px;
   right: 13px;
   z-index: 999;
-  color: ${COLOR.iconsPrimary};
+  color: ${COLOR.lightgrey2};
   cursor: pointer;
 
   &:hover {
-    color: ${COLOR.primary};
+    color: ${COLOR.black};
   }
 `;

@@ -19,6 +19,12 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  @font-face {
+    font-family: "rmel-iconfont";
+    src: url('./fonts/iconfont.eot?t=1609742889962');
+    src: url('./fonts/iconfont.ttf?t=1609742889962') format('truetype');
+  }
+
   /**
    * 1. Correct the line height in all browsers.
    * 2. Prevent adjustments of font size after orientation changes in iOS.

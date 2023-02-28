@@ -12,17 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  lightgrey2: '#757575',
-};
-
-export const BORDER = { darkgrey: 'darkgrey', lightgrey1: '#f1f3f4' };
-
-export const BACKGROUND = {
-  transparent: 'transparent',
-  blue: '#007bff',
-  white: '#ffffff',
-  lightgrey1: '#f1f3f4',
-};
+export { default as Icon } from './icon/index.jsx';
+export { default as Toolbar } from './toolbar/index.jsx';
+export { default as DropList } from './droplist/index.jsx';
+export { default as NavigationBar } from './navigation-bar/index.jsx';

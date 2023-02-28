@@ -12,17 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  lightgrey2: '#757575',
-};
+import styled from 'styled-components';
 
-export const BORDER = { darkgrey: 'darkgrey', lightgrey1: '#f1f3f4' };
+import { BACKGROUND } from '../../../../../constants/styles/colors.js';
 
-export const BACKGROUND = {
-  transparent: 'transparent',
-  blue: '#007bff',
-  white: '#ffffff',
-  lightgrey1: '#f1f3f4',
-};
+export const DropWrap = styled.div`
+  display: ${({ visibility }) =>
+    visibility === 'visible' ? 'block' : 'none'} !important;
+  position: absolute;
+  left: 0;
+  top: 28px;
+  z-index: 2;
+  min-width: 20px;
+  padding: 10px 0;
+  text-align: center;
+  background-color: ${BACKGROUND.white};
+  border: 1px solid #f1f1f1;
+  border-right-color: #ddd;
+  border-bottom-color: #ddd;
+`;

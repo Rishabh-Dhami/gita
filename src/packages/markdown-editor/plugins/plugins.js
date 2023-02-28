@@ -12,17 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  lightgrey2: '#757575',
-};
-
-export const BORDER = { darkgrey: 'darkgrey', lightgrey1: '#f1f3f4' };
-
-export const BACKGROUND = {
-  transparent: 'transparent',
-  blue: '#007bff',
-  white: '#ffffff',
-  lightgrey1: '#f1f3f4',
-};
+export function getConfig(key, defaultValue, { ...props }) {
+  return typeof props?.configs?.[key] !== 'undefined' &&
+    props?.configs?.[key] !== null
+    ? props.configs[key]
+    : defaultValue;
+}

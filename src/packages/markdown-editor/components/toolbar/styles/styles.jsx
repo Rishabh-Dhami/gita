@@ -12,17 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  lightgrey2: '#757575',
-};
+import styled from 'styled-components';
 
-export const BORDER = { darkgrey: 'darkgrey', lightgrey1: '#f1f3f4' };
+export const ToolbarContainer = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: 8px;
 
-export const BACKGROUND = {
-  transparent: 'transparent',
-  blue: '#007bff',
-  white: '#ffffff',
-  lightgrey1: '#f1f3f4',
-};
+  button {
+    min-width: 24px;
+    height: 28px;
+    margin-right: 5px;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 28px;
+    text-align: center;
+    color: #999;
+
+    &:hover {
+      color: #333;
+    }
+  }
+`;

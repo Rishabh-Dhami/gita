@@ -21,7 +21,7 @@ export const ChapterIndexContainer = styled.div`
   max-width: 250px;
   height: 100%;
   position: fixed;
-  background-color: ${BACKGROUND.primaryWhite};
+  background-color: ${BACKGROUND.white};
 `;
 
 export const ChapterIndexFilterContainer = styled.div`

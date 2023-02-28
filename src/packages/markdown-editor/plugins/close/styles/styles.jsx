@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  lightgrey2: '#757575',
-};
+import styled from 'styled-components';
 
-export const BORDER = { darkgrey: 'darkgrey', lightgrey1: '#f1f3f4' };
+import { AiFillCloseCircle } from 'react-icons/ai';
 
-export const BACKGROUND = {
-  transparent: 'transparent',
-  blue: '#007bff',
-  white: '#ffffff',
-  lightgrey1: '#f1f3f4',
-};
+import { COLOR } from '../../../constants/styles/colors.js';
+
+export const CustomAiFillCloseCircle = styled(AiFillCloseCircle)`
+  position: absolute;
+  top: 10px;
+  right: 13px;
+  z-index: 999;
+  color: ${COLOR.lightgrey2};
+  cursor: pointer;
+
+  &:hover {
+    color: ${COLOR.black};
+  }
+`;

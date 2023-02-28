@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import { BACKGROUND } from '../../../constants/styles/colors.js';
 
 export const Button = styled.button`
-  background-color: ${BACKGROUND.primaryWhite};
+  background-color: ${BACKGROUND.white};
   color: #000000;
   cursor: pointer;
   outline: none;

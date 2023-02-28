@@ -70,8 +70,8 @@ export const SignInButton = styled.button`
   max-width: 80px;
   height: 40px;
   text-align: center;
-  color: ${COLOR.secondary};
-  background-color: ${BACKGROUND.buttonSecondary};
+  color: ${COLOR.white};
+  background-color: ${BACKGROUND.blue};
   position: relative;
   flex: 0 0 20%;
   cursor: pointer;

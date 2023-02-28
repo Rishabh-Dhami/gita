@@ -12,23 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { createRef } from 'react';
+import React from 'react';
 
-import { HtmlRendererContainer } from './styles/styles.jsx';
+import { Icon } from '../components/index.jsx';
 
-function HtmlRenderer({ html, ref }) {
-  const htmlRendererEl = createRef();
+import { i18n } from '../i18n/index.js';
+
+Clear.pluginName = 'clear';
+
+function Clear({ ...props }) {
+  const handleClick = (e) => {
+    if (props?.nodeMdText.current.value === '') return;
+    if (!window.confirm || typeof window.confirm !== 'function') return;
+    const result = window.confirm(i18n.get('clearTip'));
+    if (result) props?.editorHooks.setText('');
+  };
 
   return (
-    <HtmlRendererContainer ref={ref}>
-      {typeof html === 'string'
-        ? React.createElement('div', {
-            ref: htmlRendererEl,
-            dangerouslySetInnerHTML: { __html: html },
-          })
-        : React.createElement('div', { ref: htmlRendererEl }, html)}
-    </HtmlRendererContainer>
+    <span key={props.key} title={i18n.get('btnClear')} onClick={handleClick}>
+      <Icon type="delete" />
+    </span>
   );
 }
 
-export default HtmlRenderer;
+export default Clear;

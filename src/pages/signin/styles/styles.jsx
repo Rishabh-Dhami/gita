@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import { BACKGROUND } from '../../../constants/styles/colors.js';
 
 export const SignInContainer = styled.div`
-  background-color: ${BACKGROUND.primary};
+  background-color: ${BACKGROUND.lightgrey1};
   width: 100%;
   height: 100vh;
   overflow: auto;
@@ -31,7 +31,7 @@ export const SignInMainContainer = styled.div`
 
 export const SignInHeader = styled.div`
   height: 200px;
-  background-color: ${BACKGROUND.primaryWhite};
+  background-color: ${BACKGROUND.white};
   width: 100%;
 
   > div {
@@ -68,7 +68,7 @@ export const SignInFormMainContainer = styled.div`
 `;
 
 export const SignInForm = styled.div`
-  background-color: ${BACKGROUND.primaryWhite};
+  background-color: ${BACKGROUND.white};
   width: 50%;
   height: 500px;
   display: block;

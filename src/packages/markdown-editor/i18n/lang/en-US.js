@@ -16,6 +16,7 @@ export const enUS = {
   clearTip: 'Are you sure you want to clear all contents?',
   btnHeader: 'Header',
   btnClear: 'Clear',
+  btnClose: 'Close',
   btnBold: 'Bold',
   btnItalic: 'Italic',
   btnUnderline: 'Underline',

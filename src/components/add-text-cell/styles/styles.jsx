@@ -27,7 +27,7 @@ export const AddTextCellContainer = styled.div`
 
 export const AddTextCellInnerBar = styled.hr`
   border-top: none;
-  border-bottom: 1px solid ${BORDER.primary};
+  border-bottom: 1px solid ${BORDER.darkgrey};
   position: absolute;
   width: 100%;
 `;
@@ -35,7 +35,7 @@ export const AddTextCellInnerBar = styled.hr`
 export const AddTextCellButton = styled.button`
   outline: none;
   border: none;
-  background-color: ${BACKGROUND.buttonPrimary};
+  background-color: ${BACKGROUND.white};
   color: black;
   width: 100%;
   max-width: 70px;

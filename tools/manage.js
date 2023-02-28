@@ -18,7 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
-const [, , Command] = process.argv;
+const [, , Command, ...args] = process.argv;
 const SourceDirectory = path.resolve(__dirname, '../src');
 
 const ES6Syntax2NodeModule = {
@@ -34,7 +34,11 @@ const ES6Syntax2NodeModule = {
  * @param {boolean} [options.enableLogLevel] - A flag indicating whether to include the log
  *                                             level in the output.
  */
-const _log = (level, message, { enableLogLevel = true }) => {
+const _log = (
+  level,
+  message,
+  { enableLogLevel } = { enableLogLevel: true }
+) => {
   if (enableLogLevel === true) {
     console.error(`${level.toUpperCase()}: ${message}`);
   } else {
@@ -124,6 +128,48 @@ const runCommand = (command) => {
   });
 };
 
+/**
+ * @description This function is used to count the number of javascript files in the
+ *              given directory.
+ *
+ * @param {string} directory  - The directory to count the javascript files from.
+ * @param {...option} verbose - Verbose output.
+ * @returns {Number}          - Number of javascript files.
+ */
+const countJavaScriptFiles = (directory, { verbose }) => {
+  if (verbose) {
+    _log('INFO', 'Counting JavaScript files...', { enableLogLevel: true });
+  }
+  return getJavaScriptFiles(directory).length;
+};
+
+/**
+ * @description This function is used to count the number of code lines inside of the
+ *              javascript files.
+ *
+ * @param {string} directory  - The directory to get the javascript files from.
+ * @param {...option} verbose - Verbose output.
+ * @returns {Number}          - Number of javascript code lines.
+ */
+const countJavaScriptCodeLines = (directory, { verbose }) => {
+  let lines = 0;
+  getJavaScriptFiles(directory).forEach((filePath) => {
+    if (verbose) {
+      _log(
+        'INFO',
+        `Found ${
+          fs.readFileSync(filePath, 'utf8').toString().split('\n').length
+        } lines in file ${filePath}...`,
+        {
+          enableLogLevel: true,
+        }
+      );
+    }
+    lines += fs.readFileSync(filePath, 'utf8').toString().split('\n').length;
+  });
+  return lines;
+};
+
 switch (Command) {
   case 'build':
     for (const [es6Syntax, nodeModule] of Object.entries(
@@ -165,6 +211,44 @@ switch (Command) {
             });
         }
       );
+    }
+    break;
+  case 'count':
+    if (args.length === 0) {
+      _log(
+        'ERROR',
+        `Invalid command: ${Command} can not be used with 0 arguments`,
+        { enableLogLevel: false }
+      );
+      process.exit(1);
+    }
+    const [arg1, arg2] = args;
+    switch (arg1) {
+      case '-f':
+        _log(
+          'INFO',
+          countJavaScriptFiles(SourceDirectory, {
+            verbose: arg2 === '-v' ? true : false,
+          }),
+          {
+            enableLogLevel: false,
+          }
+        );
+        break;
+      case '-l':
+        _log(
+          'INFO',
+          countJavaScriptCodeLines(SourceDirectory, {
+            verbose: arg2 === '-v' ? true : false,
+          }),
+          {
+            enableLogLevel: false,
+          }
+        );
+        break;
+      default:
+        _log('ERROR', `Invalid argument: ${arg}`, { enableLogLevel: false });
+        process.exit(1);
     }
     break;
   default:

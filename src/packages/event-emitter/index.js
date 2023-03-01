@@ -107,7 +107,7 @@ EventEmitter.prototype.eventNames = function eventNames() {
   for (name in (events = this._events)) {
     if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
   }
-  if (Object.getOwnPropertySymbols) {
+  if (typeof Object.getOwnPropertySymbols === 'function') {
     return names.concat(Object.getOwnPropertySymbols(events));
   }
   return names;

@@ -14,19 +14,67 @@
 
 import { repeat } from '../utils/tools.js';
 
+/**
+ * Object containing the Markdown decorators and their corresponding starting and
+ * ending characters.
+ *
+ * @typedef {Object} DecoratorObject
+ */
 const DECORATOR = {
+  /**
+   * @property {Array<string>} bold           - Array containing the starting and ending
+   *                                            characters for bold text.
+   */
   bold: ['**', '**'],
+  /**
+   * @property {Array<string>} italic         - Array containing the starting and ending
+   *                                            characters for italic text.
+   */
   italic: ['*', '*'],
+  /**
+   * @property {Array<string>} underline      - Array containing the starting and ending
+   *                                            characters for underline text.
+   */
   underline: ['++', '++'],
+  /**
+   * @property {Array<string>} strikethrough  - Array containing the starting and
+   *                                            ending characters for strikethrough text.
+   */
   strikethrough: ['~~', '~~'],
+  /**
+   * @property {Array<string>} inlinecode     - Array containing the starting and ending
+   *                                            characters for inline code text.
+   */
   inlinecode: ['`', '`'],
+  /**
+   * @property {Array<string>} quote          - Array containing the starting and ending
+   *                                            characters for quoted text.
+   */
   quote: ['\n>', '\n'],
+  /**
+   * @property {Array<string>} code           - Array containing the starting and ending
+   *                                            characters for code blocks.
+   */
   code: ['\n```\n', '\n```\n'],
 };
 
-for (let i = 1; i <= 6; ++i) DECORATOR[`h${i}`] = [`\n${repeat('#', i)}`, '\n'];
+/**
+ * @property {Array<string>} header           - Array containing the starting and ending
+ *                                              characters for headers.
+ */
+for (let i = 1; i <= 6; ++i)
+  DECORATOR[`h${i}`] = [`\n${repeat('#', i)} `, '\n'];
 
-function decorateTableTemplate(option) {
+/**
+ * Generates a string representing a Markdown table with a specified number of
+ * rows and columns.
+ *
+ * @param {Object} options      - An object containing options for the table.
+ * @param {number} options.row  - The number of rows in the table (default is 2).
+ * @param {number} options.col  - The number of columns in the table (default is 2).
+ * @returns {string}            - A string representing the Markdown table.
+ */
+function generateMarkdownTable(option) {
   const { row = 2, col = 2 } = option;
 
   const header = ['|'];
@@ -40,46 +88,61 @@ function decorateTableTemplate(option) {
   let rows = [
     header.join(''),
     division.join(''),
-    ...repeat(data.join(''), row, { extend: false }),
+    ...repeat(data, row, { extend: false }).map((item) => item.join('')),
   ];
   return rows.join('\n');
 }
 
-function decorateList(target, type) {
+/**
+ * Decorates a text as a list of either ordered or unordered type.
+ *
+ * @param {string} target - The target text to decorate.
+ * @param {string} type   - The type of list to create. Can be either "ordered" or
+ *                          "unordered".
+ * @returns {string}      - The decorated text as a list.
+ */
+function generateList(target, type) {
   let text = target;
-  if (text[0] !== '\n') text = '\n' + text;
+  if (text[0] !== '\n') text = `\n${text}`;
+  if (text[text.length - 1] === '\n') text = text.substr(0, text.length - 1);
 
   if (type === 'unordered') {
     return text.length > 1 ? text.replace(/\n/g, '\n* ').trim() : '* ';
   }
 
   let count = 1;
-  return text.length > 1 ? text.replace(/\n/g, () => `${count++}. `) : '1. ';
+  return text.length > 1
+    ? text.replace(/\n/g, () => `\n${count++}. `).trim()
+    : '1. ';
 }
 
 class Markdown {
   constructor(text) {
     this.text = text;
+    this.textLength = this.text.length;
   }
 
-  decorate(
-    { newBlock, start, end } = {
-      newBlock: undefined,
-      start: -1,
-      end: -1,
-    }
-  ) {
+  decorate({ newBlock = undefined, start = -1, end = -1 } = {}) {
     return {
       text: this.text,
       ...((newBlock && { newBlock: newBlock }) || {}),
       selection: {
-        ...((start !== -1 && { start: start }) || { start: text.length }),
-        ...((end !== -1 && { end: end }) || { end: text.length }),
+        ...((start === -1 && { start: 0 }) || { start: start }),
+        ...((end === -1 && { end: this.textLength }) || { end: end }),
       },
     };
   }
 }
 
+/**
+ * Decorates the given input with the specified markdown syntax
+ *
+ * @param {string} target       - The text to decorate
+ * @param {string} type         - The type of markdown decoration to apply
+ * @param {object} [option={}]  - Additional options for the decoration (e.g. tabMapValue,
+ *                                imageUrl, linkUrl)
+ * @returns {Markdown}          - The decorated Markdown object
+ */
 export function decorateIt(target, type, option = {}) {
   if (typeof DECORATOR[type] !== 'undefined') {
     return new Markdown(
@@ -93,7 +156,7 @@ export function decorateIt(target, type, option = {}) {
   switch (type) {
     case 'tab': {
       const inputVal =
-        option.tabMapValue === 1 ? '\t' : ' '.repeat(option.tabMapValue);
+        option.tabMapValue === 1 ? '\t' : repeat(' ', option.tabMapValue);
       const newSelectedText = `${inputVal}${target.replace(
         /\n/g,
         `\n${inputVal}`
@@ -107,12 +170,12 @@ export function decorateIt(target, type, option = {}) {
       });
     }
     case 'unordered': {
-      return new Markdown(decorateList(target, 'unordered')).decorate({
+      return new Markdown(generateList(target, 'unordered')).decorate({
         newBlock: true,
       });
     }
     case 'ordered': {
-      return new Markdown(decorateList(target, 'ordered')).decorate({
+      return new Markdown(generateList(target, 'ordered')).decorate({
         newBlock: true,
       });
     }
@@ -120,7 +183,7 @@ export function decorateIt(target, type, option = {}) {
       return new Markdown('---').decorate({ newBlock: true });
     }
     case 'table': {
-      return new Markdown(decorateTableTemplate(option)).decorate({
+      return new Markdown(generateMarkdownTable(option)).decorate({
         newBlock: true,
       });
     }

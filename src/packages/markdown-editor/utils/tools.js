@@ -21,16 +21,16 @@
  *                                          replace it with the original object.
  * @returns {string | object}             - The repeated object.
  */
-export function repeat(o, n, { extend } = { extend: true }) {
+export function repeat(o, n, { extend = true } = {}) {
   let r = null;
   if (typeof o === 'string') {
     r = '';
-    Array.from({ length: n }, (_, _) => {
+    Array.from({ length: n }, (_, index) => {
       r += o;
     });
   } else if (typeof o === 'object' && Array.isArray(o)) {
     r = [];
-    Array.from({ length: n }, (_, _) => {
+    Array.from({ length: n }, (_, index) => {
       r = extend === true ? [...r, ...o] : [...r, o];
     });
   } else if (typeof o === 'object') {

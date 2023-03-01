@@ -70,7 +70,7 @@ class I18n {
    * @private
    */
   #isAvailable(langName) {
-    return this.#langs[langName] === 'undefined';
+    return this.#langs?.[langName] !== undefined;
   }
 
   /**
@@ -93,8 +93,8 @@ class I18n {
     }
     if (this.#current !== langName) {
       this.#current = langName;
-      globalEmitter.emit(
-        globalEmitter.EVENT_LANG_CHANGE,
+      globalEventEmitter.emit(
+        globalEventEmitter.EVENT_LANG_CHANGE,
         this,
         langName,
         this.#langs[langName]

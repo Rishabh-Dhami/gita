@@ -58,7 +58,10 @@ function mergeObjects(obj1, obj2) {
 function mergeConfigs(defaultConfig, ...configs) {
   let mergedConfig = { ...defaultConfig };
   configs.forEach((config) => {
-    if (typeof config === 'object') {
+    if (
+      typeof config === 'object' &&
+      !(config === null || Array.isArray(config))
+    ) {
       mergedConfig = mergeObjects(mergedConfig, config);
     }
   });

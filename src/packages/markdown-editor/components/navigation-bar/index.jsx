@@ -19,12 +19,16 @@ import { ButtonContainer, MarkdownNavigation, Nav } from './styles/styles.jsx';
 function NavigationBar({ ...props }) {
   return (
     <MarkdownNavigation>
-      <Nav>
-        <ButtonContainer>{props.left}</ButtonContainer>
-      </Nav>
-      <Nav>
-        <ButtonContainer>{props.right}</ButtonContainer>
-      </Nav>
+      {Array.from(props.left).map((elem) => (
+        <Nav>
+          <ButtonContainer>{elem}</ButtonContainer>
+        </Nav>
+      ))}
+      {Array.from(props.right).map((elem) => (
+        <Nav>
+          <ButtonContainer>{elem}</ButtonContainer>
+        </Nav>
+      ))}
     </MarkdownNavigation>
   );
 }

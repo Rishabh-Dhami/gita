@@ -18,7 +18,7 @@ import { IconWrapper } from './styles/styles.jsx';
 
 function Icon({ ...props }) {
   return (
-    <IconWrapper>
+    <IconWrapper data-testid="me-icon">
       <i className={`rmel-icon-${props?.type}`} />
     </IconWrapper>
   );

@@ -12,4 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+export { default as Link } from './link.jsx';
 export { default as Divider } from './divider/index.jsx';

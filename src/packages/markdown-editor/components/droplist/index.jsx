@@ -24,7 +24,11 @@ function DropList({ children, ...props }) {
   };
 
   return (
-    <DropWrap visibility={props.visibility} onClick={handleClose}>
+    <DropWrap
+      data-testid="me-drop-list"
+      visibility={props.visibility}
+      onClick={handleClose}
+    >
       {children}
     </DropWrap>
   );

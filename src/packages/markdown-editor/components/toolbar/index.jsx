@@ -17,7 +17,9 @@ import React from 'react';
 import { ToolbarContainer } from './styles/styles.jsx';
 
 function Toolbar({ children }) {
-  return <ToolbarContainer>{children}</ToolbarContainer>;
+  return (
+    <ToolbarContainer data-testid="me-toolbar">{children}</ToolbarContainer>
+  );
 }
 
 export default Toolbar;

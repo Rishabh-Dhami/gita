@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import '@testing-library/jest-dom';
+import { render } from '@testing-library/react';
 
-import { BACKGROUND } from '../../../../../constants/styles/colors.js';
+import { Toolbar } from '../../../components/index.jsx';
 
-export const DropWrap = styled.div`
-  display: ${({ visibility }) => (visibility === 'visible' ? 'block' : 'none')};
-  position: absolute;
-  left: 0;
-  top: 28px;
-  z-index: 2;
-  min-width: 20px;
-  padding: 10px 0;
-  text-align: center;
-  background-color: ${BACKGROUND.white};
-  border: 1px solid #f1f1f1;
-  border-right-color: #ddd;
-  border-bottom-color: #ddd;
-`;
+describe('Toolbar', () => {
+  it('renders properly in the document', () => {
+    const { getByTestId } = render(<Toolbar />);
+    expect(getByTestId('me-toolbar')).toBeInTheDocument();
+  });
+
+  it('renders the children', () => {
+    const { getByTestId } = render(
+      <Toolbar>
+        <button data-testid="me-toolbar-btn">Click Me</button>
+      </Toolbar>
+    );
+    expect(getByTestId('me-toolbar-btn')).toBeInTheDocument();
+  });
+});

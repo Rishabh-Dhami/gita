@@ -20,17 +20,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { i18n } from '../i18n/index.js';
 import mergeConfigs from '../utils/merge-configs.js';
 import { decorateIt } from '../utils/decorate.js';
-import { NavigationBar } from '../components/index.jsx';
 import { getUploadPlaceholder } from '../utils/uploadPlaceholder.js';
 import { Divider as DividerPlugin } from '../plugins/index.jsx';
 import Emitter, { globalEventEmitter } from '../share/emitter.js';
+import { NavigationBar, Icon, Toolbar } from '../components/index.jsx';
 import { isKeyMatch, isPromise, getLineAndCol } from '../utils/tools.js';
 
 import LOGGER from '../../../lib/logger/logger.js';
 import { defaultConfigs } from './configs.js';
 
 import HtmlRenderer from './preview/index.jsx';
-import { Icon, Toolbar } from '../components/index.jsx';
 
 import {
   MarkdownEditorContainer,
@@ -118,6 +117,22 @@ MarkdownEditor.offKeyboard = (data) => {
   if (index >= 0) {
     MarkdownEditor.keyboardListeners.splice(index, 1);
   }
+};
+
+MarkdownEditor.PluginApis = new Map();
+
+MarkdownEditor.registerPluginApi = (name, cb) => {
+  MarkdownEditor.PluginApis.set(name, cb);
+};
+
+MarkdownEditor.unregisterPluginApi = (name) => {
+  MarkdownEditor.PluginApis.delete(name);
+};
+
+MarkdownEditor.callPluginApi = (name, ...props) => {
+  const handler = MarkdownEditor.PluginApis.get(name);
+  if (!handler) throw new Error(`API ${name} not found`);
+  return handler(...props);
 };
 
 function MarkdownEditor({ ...props }) {

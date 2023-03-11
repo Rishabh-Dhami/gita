@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const COLOR = {
-  black: '#000000',
-  white: '#ffffff',
-  lightgrey1: '#bdbdbd',
-  lightgrey2: '#757575',
-};
+import styled from 'styled-components';
 
-export const BORDER = { darkgrey: 'darkgrey', lightgrey1: '#f1f3f4' };
+import { COLOR } from '../../../../../constants/styles/colors.js';
 
-export const BACKGROUND = {
-  transparent: 'transparent',
-  blue: '#007bff',
-  white: '#ffffff',
-  lightgrey1: '#f1f3f4',
-};
+export const Container = styled.span`
+  &.disabled {
+    color: ${COLOR.lightgrey1};
+    cursor: not-allowed;
+  }
+`;

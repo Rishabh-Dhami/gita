@@ -13,4 +13,5 @@
 // limitations under the License.
 
 export { default as Link } from './link.jsx';
+export { default as Toggle } from './toggle.jsx';
 export { default as Divider } from './divider/index.jsx';

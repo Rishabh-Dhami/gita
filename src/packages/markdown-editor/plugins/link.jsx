@@ -38,6 +38,7 @@ function Link({ ...props }) {
 
   return (
     <span
+      className="button"
       title={i18n.get('btnLink')}
       onClick={() => props.editor.insertMarkdown('link')}
     >

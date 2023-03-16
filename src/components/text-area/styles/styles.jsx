@@ -21,16 +21,3 @@ import { COLOR } from '../../../constants/styles/colors.js';
 export const TextAreaContainer = styled.div`
   position: relative;
 `;
-
-export const CustomAiFillCloseCircle = styled(AiFillCloseCircle)`
-  position: absolute;
-  top: 10px;
-  right: 13px;
-  z-index: 999;
-  color: ${COLOR.lightgrey2};
-  cursor: pointer;
-
-  &:hover {
-    color: ${COLOR.black};
-  }
-`;

@@ -21,30 +21,30 @@ describe('Icon', () => {
   it('renders tab icon', () => {
     const { getByTestId } = render(<Icon type="tab" />);
     const icon = getByTestId('me-icon');
-    expect(icon.querySelector('i')).toHaveClass('rmel-icon-tab');
+    expect(icon.querySelector('i')).toHaveClass('icofont-tab');
   });
 
   it('renders keyboard icon', () => {
     const { getByTestId } = render(<Icon type="keyboard" />);
     const icon = getByTestId('me-icon');
-    expect(icon.querySelector('i')).toHaveClass('rmel-icon-keyboard');
+    expect(icon.querySelector('i')).toHaveClass('icofont-keyboard');
   });
 
   it('renders delete icon', () => {
     const { getByTestId } = render(<Icon type="delete" />);
     const icon = getByTestId('me-icon');
-    expect(icon.querySelector('i')).toHaveClass('rmel-icon-delete');
+    expect(icon.querySelector('i')).toHaveClass('icofont-delete');
   });
 
   it('renders code block icon', () => {
     const { getByTestId } = render(<Icon type="code-block" />);
     const icon = getByTestId('me-icon');
-    expect(icon.querySelector('i')).toHaveClass('rmel-icon-code-block');
+    expect(icon.querySelector('i')).toHaveClass('icofont-code-block');
   });
 
   it('renders code icon', () => {
     const { getByTestId } = render(<Icon type="code" />);
     const icon = getByTestId('me-icon');
-    expect(icon.querySelector('i')).toHaveClass('rmel-icon-code');
+    expect(icon.querySelector('i')).toHaveClass('icofont-code');
   });
 });

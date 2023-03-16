@@ -25,10 +25,11 @@ function Toggle({ ...props }) {
 
   const isDisplay = () => {
     const { canView } = props.editorConfigs;
-    if (typeof canView !== 'undefined')
+    if (typeof canView !== 'undefined') {
       return (
         [canView.html, canView.md, canView.both].filter((it) => it).length >= 2
       );
+    }
     return false;
   };
 
@@ -103,7 +104,11 @@ function Toggle({ ...props }) {
 
   return (
     isDisplay() && (
-      <span title={i18n.get(`btnMode${title}`)} onClick={handleClick}>
+      <span
+        className="button"
+        title={i18n.get(`btnMode${title}`)}
+        onClick={handleClick}
+      >
         <Icon type={icon} />
       </span>
     )

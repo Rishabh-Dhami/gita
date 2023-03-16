@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { createRef, useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -138,12 +138,12 @@ MarkdownEditor.callPluginApi = (name, ...props) => {
 function MarkdownEditor({ ...props }) {
   const logger = new LOGGER(
     MarkdownEditor.name,
-    debug === true ? LOGGER.DEBUG : LOGGER.OFF
+    props?.debug === true ? LOGGER.DEBUG : LOGGER.OFF
   );
 
   const configs = mergeConfigs(defaultConfigs, props?.configs);
 
-  const [text, setText] = useState(props?.text);
+  const [text, setText] = useState(props?.text || '');
   const [html, setHtml] = useState(props?.html);
   const [view, setView] = useState(props?.view);
   const [plugins, setPlugins] = useState(props?.plugins);
@@ -156,13 +156,10 @@ function MarkdownEditor({ ...props }) {
   const nodeMdPreview = createRef();
   const nodeMdPreviewWrapper = createRef();
 
-  const useForceUpdate = () => {
-    const [value, setValue] = useState(0);
-    return () => setValue(value + 1);
-  };
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleLocaleUpdate = () => {
-    useForceUpdate();
+    forceUpdate();
   };
 
   const handleFocus = (e) => {
@@ -177,6 +174,13 @@ function MarkdownEditor({ ...props }) {
     MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_BLUR, e);
   };
 
+  const setHtmlState = (html) => {
+    return new Promise((resolve) => {
+      setHtml(html);
+      resolve(html);
+    });
+  };
+
   const renderHTML = (text) => {
     if (typeof props.renderHTML === 'undefined') {
       logger.error(
@@ -186,9 +190,9 @@ function MarkdownEditor({ ...props }) {
     }
 
     const html = props.renderHTML(text);
-    if (isPromise(html)) html.then((html) => setHtml(html));
-    else if (typeof html === 'function') setHtml(html());
-    else setHtml(html);
+    if (isPromise(html)) html.then((html) => setHtmlState(html));
+    else if (typeof html === 'function') return setHtmlState(html());
+    else return setHtmlState(html);
   };
 
   useEffect(() => {
@@ -268,7 +272,7 @@ function MarkdownEditor({ ...props }) {
           : plugin.component.pluginName;
       result[plugin.component.align].push(
         React.createElement(plugin.component, {
-          editor: this,
+          editor: MarkdownEditor,
           editorConfigs: configs,
           configs: {
             ...(plugin.component.configs || {}),
@@ -352,11 +356,13 @@ function MarkdownEditor({ ...props }) {
     if (hasContentChanged === false) hasContentChanged = true;
 
     const rendering = renderHTML(text);
-    if (onChangeTrigger === 'both' || onChangeTrigger === 'afterRender')
+    if (onChangeTrigger === 'both' || onChangeTrigger === 'afterRender') {
       rendering.then(() => {
-        if (props?.onChange)
+        if (props?.onChange) {
           props.onChange({ text: text, html: getHtmlValue() }, event);
+        }
       });
+    }
   };
 
   const insertMarkdownText = (
@@ -446,7 +452,7 @@ function MarkdownEditor({ ...props }) {
     }
     insertMarkdownText($decorate.text, true, $decorate.selection);
   };
-  this.insertMarkdown = insertMarkdown;
+  MarkdownEditor.insertMarkdown = insertMarkdown;
 
   const uploadWithDataTransfer = (items) => {
     if (!configs?.onImageUpload) return;
@@ -500,9 +506,9 @@ function MarkdownEditor({ ...props }) {
     uploadWithDataTransfer(event.dataTransfer.items);
   };
 
-  const scrollScale = 1;
-  const isSyncingScroll = false;
-  const shouldSyncScroll = 'md';
+  let scrollScale = 1;
+  let isSyncingScroll = false;
+  let shouldSyncScroll = 'md';
 
   const handleSyncScroll = (type, e) => {
     if (type !== shouldSyncScroll) return;
@@ -545,8 +551,11 @@ function MarkdownEditor({ ...props }) {
   };
 
   const handleChange = (e) => {
-    e.persists();
+    e.persist();
     setMarkdownText(e.target.value, e);
+
+    nodeMdText.current.style.height = '';
+    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
   };
 
   const handleEditorKeyDown = (e) => {
@@ -586,9 +595,11 @@ function MarkdownEditor({ ...props }) {
 
       const $isOrderList = $lineInfo.currentLine.match(/^(\s*?)(\d+)\. /);
       if ($isOrderList) {
-        if (/^(\s*?)(\d+)\. $/.test($lineInfo.currentLine)) emptyCurrentLine();
-        else
+        if (/^(\s*?)(\d+)\. $/.test($lineInfo.currentLine)) {
+          emptyCurrentLine();
+        } else {
           addSymbol(`${$isOrderList[1]}${parseInt($isOrderList[2], 10) + 1}. `);
+        }
         return;
       }
     }
@@ -667,7 +678,7 @@ function MarkdownEditor({ ...props }) {
             onMouseOver={() => (shouldSyncScroll = 'html')}
             onScroll={(e) => handleSyncScroll('html', e)}
           >
-            <HtmlRenderer html={html} ref={nodeMdPreview} />
+            <HtmlRenderer html={html} innerRef={nodeMdPreview} />
           </div>
         </MarkdownEditorPreviewContainer>
       </MarkdownEditorContainerInner>

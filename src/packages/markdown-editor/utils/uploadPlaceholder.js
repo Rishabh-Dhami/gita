@@ -30,11 +30,13 @@ export function getUploadPlaceholder(file, onImageUpload) {
     };
 
     const upload = onImageUpload(file, handleUploaded);
-    if (isPromise(upload)) upload.then(handleUploaded);
-    else
+    if (isPromise(upload)) {
+      upload.then(handleUploaded);
+    } else {
       throw new Error(
         `${getUploadPlaceholder.name}: Can't resolve Promise 'upload'`
       );
+    }
   });
 
   return { placeholder, uploaded };

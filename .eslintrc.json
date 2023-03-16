@@ -8,6 +8,8 @@
     "quotes": "off",
     "max-len": "off",
     "space-before-function-paren": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "prefer-rest-params": "off",
+    "no-unused-vars": "off"
   }
 }

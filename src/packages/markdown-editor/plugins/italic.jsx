@@ -12,43 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { i18n } from '../i18n/index.js';
 import { Icon } from '../components/index.jsx';
 
-FullScreen.pluginName = 'full-screen';
-FullScreen.align = 'right';
+Italic.pluginName = 'font-italic';
+Italic.align = 'left';
 
-function FullScreen({ ...props }) {
-  const [enable, setEnable] = useState(props.editorState.fullScreen);
+function Italic({ ...props }) {
+  const { editor, editorConfigs } = props;
 
-  const handleClick = () => {
-    props.editorHooks.setFullScreen(!enable);
-  };
-
-  const handleChange = (enable) => {
-    setEnable(enable);
+  const handleKeyboard = {
+    key: 'i',
+    keyCode: 73,
+    aliasCommand: true,
+    withKey: ['ctrlKey'],
+    callback: () => this.editor.insertMarkdown('italic'),
   };
 
   useEffect(() => {
-    props.editor.on('fullscreen', handleChange);
-    return () => {
-      props.editor.off('fullscreen', handleChange);
-    };
+    if (editorConfigs.shortcuts) editor.onKeyboard(handleKeyboard);
+    return () => editor.offKeyboard(handleKeyboard);
   }, []);
 
-  return props.editorConfigs?.canView?.fullScreen ? (
+  return (
     <span
       className='button'
-      title={i18n.get(enable ? 'btnExitFullScreen' : 'btnFullScreen')}
-      onClick={handleClick}
+      title={i18n.get('btnItalic')}
+      onClick={() => editor.insertMarkdown('italic')}
     >
-      <Icon type={enable ? 'fullscreen-exit' : 'fullscreen'} />
+      <Icon type="italic" />
     </span>
-  ) : (
-    <></>
   );
 }
 
-export default FullScreen;
+export default Italic;

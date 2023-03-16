@@ -12,23 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { createRef } from 'react';
+import React from 'react';
 
-import { HtmlRendererContainer } from './styles/styles.jsx';
+import { i18n } from '../i18n/index.js';
+import { Icon } from '../components/index.jsx';
 
-function HtmlRenderer({ html, innerRef }) {
-  const htmlRendererEl = createRef();
+BlockWrap.pluginName = 'block-wrap';
+BlockWrap.align = 'left';
+
+function BlockWrap({ ...props }) {
+  const { editor } = props;
 
   return (
-    <HtmlRendererContainer ref={innerRef}>
-      {typeof html === 'string'
-        ? React.createElement('div', {
-            ref: htmlRendererEl,
-            dangerouslySetInnerHTML: { __html: html },
-          })
-        : React.createElement('div', { ref: htmlRendererEl }, html)}
-    </HtmlRendererContainer>
+    <span
+      className="button"
+      title={i18n.get('btnLineBreak')}
+      onClick={() => editor.insertMarkdown('hr')}
+    >
+      <Icon type="bubble-down" />
+    </span>
   );
 }
 
-export default HtmlRenderer;
+export default BlockWrap;

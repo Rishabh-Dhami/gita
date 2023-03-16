@@ -48,6 +48,7 @@ export const MarkdownEditorTextAreaContainer = styled.div`
   border-right: 1px solid #e0e0e0;
   min-height: 0;
   min-width: 0;
+  height: fit-content;
 
   &.in-visible {
     display: none;
@@ -67,8 +68,9 @@ export const MarkdownEditorTextAreaContainer = styled.div`
     min-height: 0;
     background: #fff;
     color: #333;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.7;
+    overflow: hidden;
   }
 `;
 

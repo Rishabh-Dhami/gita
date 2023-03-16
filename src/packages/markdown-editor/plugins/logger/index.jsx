@@ -91,8 +91,10 @@ Logger.pluginName = 'logger';
 Logger.align = 'left';
 
 function Logger({ ...props }) {
-  const logger = new LoggerAPI({ maxSize: props.editorConfigs.loggerMaxSize });
-  const timerId = null;
+  const { nodeMdText, editor, editorState, editorHooks, editorConfigs } = props;
+
+  const logger = new LoggerAPI({ maxSize: editorConfigs.loggerMaxSize });
+  let timerId = null;
 
   const [lastPop, setLastPop] = useState(null);
 
@@ -105,23 +107,30 @@ function Logger({ ...props }) {
     }
   };
 
+  const resize = () => {
+    nodeMdText.current.style.height = '';
+    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
+  };
+
   const handleUndo = () => {
-    const last = logger.undo(props.editorState.text);
+    const last = logger.undo(editorState.text);
     if (typeof last === 'undefined') return;
     pause();
     setLastPop(last);
-    props.editorHooks.setText(last);
+    editorHooks.setText(last);
+    resize();
   };
 
   const handleRedo = () => {
     const last = logger.redo();
     if (typeof last === 'undefined') return;
     setLastPop(last);
-    props.editorHooks.setText(last);
+    editorHooks.setText(last);
+    resize();
   };
 
-  props.editor.registerPluginApi('undo', handleUndo);
-  props.editor.registerPluginApi('redo', handleRedo);
+  editor.registerPluginApi('undo', handleUndo);
+  editor.registerPluginApi('redo', handleRedo);
 
   const handleKeyboards = [
     { key: 'y', keyCode: 89, withKey: ['ctrlKey'], callback: handleRedo },
@@ -162,13 +171,13 @@ function Logger({ ...props }) {
       }
       window.clearTimeout(timerId);
       timerId = 0;
-    }, props.editorConfigs.loggerInterval);
+    }, editorConfigs.loggerInterval);
   };
 
   useEffect(() => {
-    props.editor.on('change', handleChange);
-    handleKeyboards.forEach((keyboard) => props.editor.onKeyboard(keyboard));
-    logger.initVal = props.editorState.text;
+    editor.on('change', handleChange);
+    handleKeyboards.forEach((keyboard) => editor.onKeyboard(keyboard));
+    logger.initVal = editorState.text;
     forceUpdate();
 
     return () => {
@@ -176,28 +185,28 @@ function Logger({ ...props }) {
         window.clearTimeout(timerId);
         timerId = 0;
       }
-      props.editor.off('change', handleChange);
-      props.editor.unregisterPluginApi('undo');
-      props.editor.unregisterPluginApi('redo');
-      handleKeyboards.forEach((keyboard) => props.editor.offKeyboard(keyboard));
+      editor.off('change', handleChange);
+      editor.unregisterPluginApi('undo');
+      editor.unregisterPluginApi('redo');
+      handleKeyboards.forEach((keyboard) => editor.offKeyboard(keyboard));
     };
   }, []);
 
   const hasUndo =
-    logger.getUndoCount() > 1 || logger.initValue !== props.editorState.text;
+    logger.getUndoCount() > 1 || logger.initValue !== editorState.text;
   const hasRedo = logger.getRedoCount() > 0;
 
   return (
     <>
       <Container
-        className={hasUndo ? '' : 'disabled'}
+        className={`button ${hasUndo ? '' : 'disabled'}`}
         title={i18n.get('btnUndo')}
         onClick={handleUndo}
       >
         <Icon type="undo" />
       </Container>
       <Container
-        className={hasRedo ? '' : 'disabled'}
+        className={`button ${hasRedo ? '' : 'disabled'}`}
         title={i18n.get('btnRedo')}
         onClick={handleRedo}
       >

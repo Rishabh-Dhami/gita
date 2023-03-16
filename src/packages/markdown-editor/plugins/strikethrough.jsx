@@ -12,40 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { i18n } from '../i18n/index.js';
 import { Icon } from '../components/index.jsx';
 
-Clear.pluginName = 'clear';
-Clear.align = 'left';
+StrikeThrough.pluginName = 'font-strikethrough';
+StrikeThrough.align = 'left';
 
-function Clear({ ...props }) {
-  const { editorHooks, nodeMdText } = props;
+function StrikeThrough({ ...props }) {
+  const { editor, editorConfigs } = props;
 
-  const resize = () => {
-    nodeMdText.current.style.height = '';
-    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
+  const handleKeyboard = {
+    key: 'd',
+    keyCode: 68,
+    aliasCommand: true,
+    withKey: ['ctrlKey'],
+    callback: () => this.editor.insertMarkdown('strikethrough'),
   };
 
-  const handleClick = (e) => {
-    if (nodeMdText.current.value === '') return;
-    if (!window.confirm || typeof window.confirm !== 'function') return;
-    const result = window.confirm(i18n.get('clearTip'));
-    if (result) editorHooks.setText('');
-    resize();
-  };
+  useEffect(() => {
+    if (editorConfigs.shortcuts) editor.onKeyboard(handleKeyboard);
+    return () => editor.offKeyboard(handleKeyboard);
+  }, []);
 
   return (
     <span
       className="button"
-      key={props.key}
-      title={i18n.get('btnClear')}
-      onClick={handleClick}
+      title={i18n.get('btnStrikethrough')}
+      onClick={() => editor.insertMarkdown('strikethrough')}
     >
-      <Icon type="delete" />
+      <Icon type="strike-through" />
     </span>
   );
 }
 
-export default Clear;
+export default StrikeThrough;

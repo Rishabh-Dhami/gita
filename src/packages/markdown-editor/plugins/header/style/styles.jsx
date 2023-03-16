@@ -14,19 +14,14 @@
 
 import styled from 'styled-components';
 
-import { AiFillCloseCircle } from 'react-icons/ai';
+export const HeaderListContainer = styled.ul`
+  li {
+    width: 100px;
+    box-sizing: border-box;
+    padding: 8px 0;
 
-import { COLOR } from '../../../constants/styles/colors.js';
-
-export const CustomAiFillCloseCircle = styled(AiFillCloseCircle)`
-  position: absolute;
-  top: 10px;
-  right: 13px;
-  z-index: 999;
-  color: ${COLOR.lightgrey2};
-  cursor: pointer;
-
-  &:hover {
-    color: ${COLOR.black};
+    &:hover {
+      background: #f5f5f5;
+    }
   }
 `;

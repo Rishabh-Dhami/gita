@@ -62,8 +62,9 @@ const DECORATOR = {
  * @property {Array<string>} header           - Array containing the starting and ending
  *                                              characters for headers.
  */
-for (let i = 1; i <= 6; ++i)
+for (let i = 1; i <= 6; ++i) {
   DECORATOR[`h${i}`] = [`\n${repeat('#', i)} `, '\n'];
+}
 
 /**
  * Generates a string representing a Markdown table with a specified number of
@@ -85,7 +86,7 @@ function generateMarkdownTable(option) {
   for (let i = 0; i < col; i++) division.push(' --- |');
   for (let i = 0; i < col; i++) data.push(' Data |');
 
-  let rows = [
+  const rows = [
     header.join(''),
     division.join(''),
     ...repeat(data, row, { extend: false }).map((item) => item.join('')),

@@ -86,7 +86,7 @@ export const ButtonContainer = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
 
-  button {
+  .button {
     position: relative;
     min-width: 24px;
     height: 28px;

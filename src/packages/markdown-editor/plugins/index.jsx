@@ -13,6 +13,19 @@
 // limitations under the License.
 
 export { default as Link } from './link.jsx';
-export { default as Toggle } from './toggle.jsx';
+export { default as Bold } from './bold.jsx';
+export { default as Close } from './close.jsx';
+export { default as Clear } from './clear.jsx';
+export { default as Quote } from './quote.jsx';
 export { default as Logger } from './logger/index.jsx';
+export { default as Toggle } from './toggle.jsx';
+export { default as Italic } from './italic.jsx';
+export { default as Header } from './header/index.jsx';
 export { default as Divider } from './divider/index.jsx';
+export { default as Underline } from './underline.jsx';
+export { default as BlockWrap } from './wrap.jsx';
+export { default as BlockCode } from './block-code.jsx';
+export { default as InlineCode } from './inline-code.jsx';
+export { default as OrderedList } from './ordered-list.jsx';
+export { default as StrikeThrough } from './strikethrough.jsx';
+export { default as UnOrderedList } from './unordered-list.jsx';

@@ -12,40 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { i18n } from '../i18n/index.js';
 import { Icon } from '../components/index.jsx';
 
-Clear.pluginName = 'clear';
-Clear.align = 'left';
+Bold.pluginName = 'font-bold';
+Bold.align = 'left';
 
-function Clear({ ...props }) {
-  const { editorHooks, nodeMdText } = props;
-
-  const resize = () => {
-    nodeMdText.current.style.height = '';
-    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
+function Bold({ ...props }) {
+  const handleKeyboard = {
+    key: 'b',
+    keyCode: 66,
+    aliasCommand: true,
+    withKey: ['ctrlKey'],
+    callback: () => props.editor.insertMarkdown('bold'),
   };
 
-  const handleClick = (e) => {
-    if (nodeMdText.current.value === '') return;
-    if (!window.confirm || typeof window.confirm !== 'function') return;
-    const result = window.confirm(i18n.get('clearTip'));
-    if (result) editorHooks.setText('');
-    resize();
-  };
+  useEffect(() => {
+    if (props.editorConfigs.shortcuts) props.editor.onKeyboard(handleKeyboard);
+    return () => props.editor.offKeyboard(handleKeyboard);
+  }, []);
 
   return (
     <span
       className="button"
-      key={props.key}
-      title={i18n.get('btnClear')}
-      onClick={handleClick}
+      title={i18n.get('btnBold')}
+      onClick={() => props.editor.insertMarkdown('bold')}
     >
-      <Icon type="delete" />
+      <Icon type="bold" />
     </span>
   );
 }
 
-export default Clear;
+export default Bold;

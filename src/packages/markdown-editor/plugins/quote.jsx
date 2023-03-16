@@ -14,13 +14,24 @@
 
 import React from 'react';
 
-import { CustomAiFillCloseCircle } from './styles/styles.jsx';
+import { i18n } from '../i18n/index.js';
+import { Icon } from '../components/index.jsx';
 
-Close.pluginName = 'close';
-Close.align = 'right';
+Quote.pluginName = 'quote';
+Quote.align = 'left';
 
-function Close({ ...props }) {
-  return <CustomAiFillCloseCircle onClick={props?.onCloseMarkdownEditor} />;
+function Quote({ ...props }) {
+  const { editor } = props;
+
+  return (
+    <span
+      className="button"
+      title={i18n.get('btnQuote')}
+      onClick={() => editor.insertMarkdown('quote')}
+    >
+      <Icon type="quote-right" />
+    </span>
+  );
 }
 
-export default Close;
+export default Quote;

@@ -550,12 +550,14 @@ function MarkdownEditor({ ...props }) {
     }
   };
 
+  useEffect(() => {
+    nodeMdText.current.style.height = '';
+    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
+  }, [text]);
+
   const handleChange = (e) => {
     e.persist();
     setMarkdownText(e.target.value, e);
-
-    nodeMdText.current.style.height = '';
-    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
   };
 
   const handleEditorKeyDown = (e) => {

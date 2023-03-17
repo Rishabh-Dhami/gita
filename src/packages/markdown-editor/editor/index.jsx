@@ -172,6 +172,11 @@ function MarkdownEditor({ ...props }) {
     const { onBlur } = props;
     if (typeof onBlur === 'function') onBlur(e);
     MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_BLUR, e);
+    setView({ ...view, md: false, menu: false, html: true });
+  };
+
+  const handleClick = (e) => {
+    if (e.detail === 2) setView({ ...view, md: true, menu: true, html: false });
   };
 
   const setHtmlState = (html) => {
@@ -639,7 +644,7 @@ function MarkdownEditor({ ...props }) {
         <NavigationBar
           left={getPlugins()?.left || []}
           right={getPlugins()?.right || []}
-        ></NavigationBar>
+        />
       )}
       <MarkdownEditorContainerInner>
         {$showHideMenu && (
@@ -672,7 +677,8 @@ function MarkdownEditor({ ...props }) {
           />
         </MarkdownEditorTextAreaContainer>
         <MarkdownEditorPreviewContainer
-          className={view.html ? 'visible' : 'in-visible'}
+          className={view.html === true ? 'visible' : 'in-visible'}
+          onClick={handleClick}
         >
           <div
             className="preview-wrapper"

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import MarkdownIt from 'markdown-it';
 
@@ -59,8 +59,6 @@ function TextEditor({ onCloseTextEditor }) {
   return (
     <TextAreaContainer>
       <MarkdownEditor
-        onFocus={(e) => console.log(e)}
-        onBlur={(e) => console.log(e)}
         renderHTML={(text) => mdParser.render(text)}
         onChange={({ html, text }) => console.log(html, text)}
         view={{ md: true, menu: true, html: false }}

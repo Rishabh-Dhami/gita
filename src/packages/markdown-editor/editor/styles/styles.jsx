@@ -22,10 +22,10 @@ export const MarkdownEditorContainer = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100% !important;
 
   &.full {
-    width: 100%;
-    height: 100% !important;
     position: fixed;
     left: 0px;
     top: 0px;
@@ -76,15 +76,17 @@ export const MarkdownEditorTextAreaContainer = styled.div`
 
 export const MarkdownEditorPreviewContainer = styled.div`
   min-height: 0;
-  min-width: 0;
+  width: 100%;
 
   &.in-visible {
     display: none;
   }
 
   > .preview-wrapper {
+    width: 100%;
     height: 100%;
     box-sizing: border-box;
     overflow: auto;
+    padding: 0 10px;
   }
 `;

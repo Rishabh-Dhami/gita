@@ -21,6 +21,7 @@ import {
   Bold,
   Close,
   Clear,
+  Table,
   Quote,
   Logger,
   Italic,
@@ -51,6 +52,7 @@ function TextEditor({ onCloseTextEditor }) {
   MarkdownEditor.usePlugin(BlockWrap);
   MarkdownEditor.usePlugin(InlineCode);
   MarkdownEditor.usePlugin(BlockCode);
+  MarkdownEditor.usePlugin(Table);
   MarkdownEditor.usePlugin(Link);
   MarkdownEditor.usePlugin(Clear);
   MarkdownEditor.usePlugin(Logger);

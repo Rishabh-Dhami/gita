@@ -17,6 +17,7 @@ export { default as Bold } from './bold.jsx';
 export { default as Close } from './close.jsx';
 export { default as Clear } from './clear.jsx';
 export { default as Quote } from './quote.jsx';
+export { default as Table } from './table/index.jsx';
 export { default as Logger } from './logger/index.jsx';
 export { default as Toggle } from './toggle.jsx';
 export { default as Italic } from './italic.jsx';

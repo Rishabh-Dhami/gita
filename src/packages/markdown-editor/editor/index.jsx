@@ -162,6 +162,23 @@ function MarkdownEditor({ ...props }) {
     forceUpdate();
   };
 
+  const displayPreview = () => {
+    setView({ ...view, md: false, menu: false, html: true });
+  };
+
+  const handleKeyboard = {
+    key: 'Enter',
+    keyCode: 13,
+    aliasCommand: true,
+    withKey: ['ctrlKey', 'shiftKey'],
+    callback: () => displayPreview(),
+  };
+
+  useEffect(() => {
+    MarkdownEditor.onKeyboard(handleKeyboard);
+    return () => MarkdownEditor.offKeyboard(handleKeyboard);
+  }, []);
+
   const handleFocus = (e) => {
     const { onFocus } = props;
     if (typeof onFocus === 'function') onFocus(e);
@@ -172,7 +189,6 @@ function MarkdownEditor({ ...props }) {
     const { onBlur } = props;
     if (typeof onBlur === 'function') onBlur(e);
     MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_BLUR, e);
-    setView({ ...view, md: false, menu: false, html: true });
   };
 
   const handleClick = (e) => {

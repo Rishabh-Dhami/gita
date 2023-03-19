@@ -12,26 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import styled from 'styled-components';
 
-import { i18n } from '../i18n/index.js';
-import { Icon } from '../components/index.jsx';
+export const TableListContainer = styled.ul`
+  position: relative;
+  margin: 0px 10px;
+  box-sizing: border-box;
 
-InlineCode.pluginName = 'inline-code';
-InlineCode.align = 'left';
+  .list-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
 
-function InlineCode({ ...props }) {
-  const { editor } = props;
-
-  return (
-    <span
-      className="button"
-      title={i18n.get('btnInlineCode')}
-      onClick={() => editor.insertMarkdown('inlinecode')}
-    >
-      <Icon type="code-alt" />
-    </span>
-  );
-}
-
-export default InlineCode;
+    &.active {
+      background: #9e9e9e;
+    }
+  }
+`;

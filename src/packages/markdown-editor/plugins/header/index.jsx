@@ -58,7 +58,7 @@ function Header({ ...props }) {
 
   return (
     <span
-      className='button'
+      className="button"
       title={i18n.get('btnHeader')}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}

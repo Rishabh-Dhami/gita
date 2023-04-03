@@ -87,13 +87,13 @@ MarkdownEditor._eventType = (event) => {
 };
 
 MarkdownEditor.on = (event, callback) => {
-  const $eventType = MarkdownEditor._eventType(event);
-  if ($eventType) MarkdownEditor.emitter.on($eventType, callback);
+  const eventType = MarkdownEditor._eventType(event);
+  if (eventType) MarkdownEditor.emitter.on(eventType, callback);
 };
 
 MarkdownEditor.off = (event, callback) => {
-  const $eventType = MarkdownEditor._eventType(event);
-  if ($eventType) MarkdownEditor.emitter.off($eventType, callback);
+  const eventType = MarkdownEditor._eventType(event);
+  if (eventType) MarkdownEditor.emitter.off(eventType, callback);
 };
 
 MarkdownEditor.keyboardListeners = [];
@@ -154,6 +154,7 @@ function MarkdownEditor({ ...props }) {
 
   const nodeMdText = createRef();
   const nodeMdPreview = createRef();
+  const markdownEditor = createRef();
   const nodeMdPreviewWrapper = createRef();
 
   const [_, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -175,8 +176,20 @@ function MarkdownEditor({ ...props }) {
   };
 
   useEffect(() => {
-    MarkdownEditor.onKeyboard(handleKeyboard);
-    return () => MarkdownEditor.offKeyboard(handleKeyboard);
+    const handleKeyDown = (e) => {
+      if (isKeyMatch(e, handleKeyboard)) {
+        e.preventDefault();
+        handleKeyboard.callback(e);
+        return;
+      }
+      MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_KEY_DOWN, e);
+    };
+    typeof markdownEditor.current !== 'undefined' &&
+      markdownEditor.current.addEventListener('keydown', handleKeyDown);
+    return () => {
+      typeof markdownEditor.current !== 'undefined' &&
+        markdownEditor.current.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const handleFocus = (e) => {
@@ -234,12 +247,14 @@ function MarkdownEditor({ ...props }) {
 
   useEffect(() => {
     if (typeof props.text === 'undefined' || props.text === text) return;
-    let { text } = props;
-    if (typeof text !== 'string') text = String(text).toString();
-    text = text.replace(/↵/g, '\n');
-    setText(text);
-    renderHTML(text);
-  }, [props.text]);
+    let value = props.text;
+    if (typeof value !== 'string') value = String(value).toString();
+    value = value.replace(/↵/g, '\n');
+    if (text !== value) {
+      setText(value);
+      renderHTML(value);
+    }
+  }, [text, props.text]);
 
   const getPlugins = () => {
     let plugins = [];
@@ -646,30 +661,31 @@ function MarkdownEditor({ ...props }) {
     setView({ ...view, menu: !view.menu });
   };
 
-  const $isShowMenu = !!view.menu;
-  const $showHideMenu =
+  const isShowMenu = !!view.menu;
+  const showHideMenu =
     configs.canView && configs.canView.hideMenu && !configs.canView.menu;
 
   return (
     <MarkdownEditorContainer
+      ref={markdownEditor}
       className={fullScreen ? 'full' : ''}
       onKeyDown={handleKeyDown}
       onDrop={handleDrop}
     >
-      {$isShowMenu && (
+      {isShowMenu && (
         <NavigationBar
           left={getPlugins()?.left || []}
           right={getPlugins()?.right || []}
         />
       )}
       <MarkdownEditorContainerInner>
-        {$showHideMenu && (
+        {showHideMenu && (
           <Toolbar>
             <span
-              title={$isShowMenu ? 'Hide menu' : 'Show menu'}
+              title={isShowMenu ? 'Hide menu' : 'Show menu'}
               onClick={handleToggleMenu}
             >
-              <Icon type={`expand-${$isShowMenu ? 'less' : 'more'}`} />
+              <Icon type={`expand-${isShowMenu ? 'less' : 'more'}`} />
             </span>
           </Toolbar>
         )}

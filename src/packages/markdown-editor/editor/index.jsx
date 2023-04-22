@@ -224,7 +224,7 @@ function MarkdownEditor({ ...props }) {
     }
 
     const html = props.renderHTML(text);
-    if (isPromise(html)) html.then((html) => setHtmlState(html));
+    if (isPromise(html)) return html.then((html) => setHtmlState(html));
     else if (typeof html === 'function') return setHtmlState(html());
     else return setHtmlState(html);
   };

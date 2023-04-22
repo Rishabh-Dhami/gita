@@ -254,7 +254,16 @@ function MarkdownEditor({ ...props }) {
       setText(value);
       renderHTML(value);
     }
-  }, [text, props.text]);
+  }, [props.text]);
+
+  useEffect(() => {
+    let value = text;
+    value = value.replace(/↵/g, '\n');
+    if (text !== value) {
+      setText(value);
+      renderHTML(value);
+    }
+  }, [text]);
 
   const getPlugins = () => {
     let plugins = [];
@@ -372,8 +381,8 @@ function MarkdownEditor({ ...props }) {
     const onChangeTrigger = configs?.onChangeTrigger || 'both';
 
     if (text === value) return;
-    const $text = value.replace(/↵/g, '\n');
-    setText($text);
+    value = value.replace(/↵/g, '\n');
+    setText(value);
 
     if (
       props?.onChange &&
@@ -395,7 +404,7 @@ function MarkdownEditor({ ...props }) {
     if (onChangeTrigger === 'both' || onChangeTrigger === 'afterRender') {
       rendering.then(() => {
         if (props?.onChange) {
-          props.onChange({ text: text, html: getHtmlValue() }, event);
+          props.onChange({ text, html: getHtmlValue() }, event);
         }
       });
     }
@@ -491,22 +500,25 @@ function MarkdownEditor({ ...props }) {
   MarkdownEditor.insertMarkdown = insertMarkdown;
 
   const uploadWithDataTransfer = (items) => {
-    if (!configs?.onImageUpload) return;
-
     const { onImageUpload } = configs;
 
-    const $promiseQueue = [];
+    const promiseQueue = [];
     Array.prototype.forEach.call(items, (item) => {
-      if (item.kind === 'file' && item.type.includes('image')) {
-        const $file = item.getAsFile();
-        if (typeof $file === 'undefined') return;
+      if (
+        item.kind === 'file' &&
+        item.type.includes('image') &&
+        configs.allowPasteImage &&
+        typeof onImageUpload === 'function'
+      ) {
+        const file = item.getAsFile();
+        if (typeof file === 'undefined') return;
 
-        const $placeholder = getUploadPlaceholder($file, onImageUpload);
-        $promiseQueue.push(Promise.resolve($placeholder.placeholder));
+        const placeholder = getUploadPlaceholder(file, onImageUpload);
+        promiseQueue.push(Promise.resolve(placeholder.placeholder));
 
-        $placeholder.uploaded.then((string) => {
-          const $text = text.replace($placeholder.placeholder, string);
-          const $offset = string.length - $placeholder.placeholder.length;
+        placeholder.uploaded.then((string) => {
+          const $text = text.replace(placeholder.placeholder, string);
+          const $offset = string.length - placeholder.placeholder.length;
           const $selection = getSelection();
 
           setMarkdownText($text, undefined, {
@@ -515,7 +527,7 @@ function MarkdownEditor({ ...props }) {
           });
         });
       } else if (item.kind === 'string' && item.type === 'text/plain') {
-        $promiseQueue.push(
+        promiseQueue.push(
           new Promise((resolve) => {
             item.getAsString(resolve);
           })
@@ -523,13 +535,13 @@ function MarkdownEditor({ ...props }) {
       }
     });
 
-    Promise.all($promiseQueue).then((result) => {
-      const $text = result.join('');
-      const $selection = getSelection();
+    Promise.all(promiseQueue).then((result) => {
+      const text = result.join('');
+      const selection = getSelection();
 
-      insertMarkdownText($text, true, {
-        start: $selection.start === $selection.end ? $text.length : 0,
-        end: $text.length,
+      insertMarkdownText(text, true, {
+        start: selection.start === selection.end ? text.length : 0,
+        end: text.length,
       });
     });
   };
@@ -649,12 +661,11 @@ function MarkdownEditor({ ...props }) {
   };
 
   const handlePaste = (e) => {
-    if (!configs?.allowPasteImage || !configs?.onImageUpload) return;
-    const $event = e.nativeEvent;
-    const $items = ($event.clipboardData || window?.clipboardData).items;
-    if (!$items) return;
+    const event = e.nativeEvent;
+    const items = (event.clipboardData || window?.clipboardData).items;
+    if (!items) return;
     e.preventDefault();
-    uploadWithDataTransfer($items);
+    uploadWithDataTransfer(items);
   };
 
   const handleToggleMenu = (e) => {

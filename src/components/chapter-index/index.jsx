@@ -17,12 +17,13 @@ import React from 'react';
 import { SearchBox } from '../index.jsx';
 
 import {
+  ChapterCell,
   ChaptersContainer,
   ChapterIndexContainer,
   ChapterIndexFilterContainer,
 } from './styles/styles.jsx';
 
-function ChapterIndex({ chapters }) {
+function ChapterIndex({ selectedChapter, setSelectedChapter, chapters }) {
   return (
     <ChapterIndexContainer>
       <ChapterIndexFilterContainer>
@@ -39,7 +40,16 @@ function ChapterIndex({ chapters }) {
         />
       </ChapterIndexFilterContainer>
       <ChaptersContainer>
-        {chapters && chapters.map((chapter) => <li>{chapter}</li>)}
+        {chapters &&
+          chapters.map((chapter) => (
+            <ChapterCell
+              key={chapter}
+              active={chapter === selectedChapter}
+              onClick={(e) => setSelectedChapter(e.target.getAttribute('key'))}
+            >
+              {chapter}
+            </ChapterCell>
+          ))}
       </ChaptersContainer>
     </ChapterIndexContainer>
   );

@@ -14,7 +14,7 @@
 
 import styled from 'styled-components';
 
-import { BACKGROUND } from '../../../constants/styles/colors.js';
+import { BACKGROUND, COLOR } from '../../../constants/styles/colors.js';
 
 export const ChapterIndexContainer = styled.div`
   width: 100%;
@@ -28,4 +28,23 @@ export const ChapterIndexFilterContainer = styled.div`
   padding: 12px;
 `;
 
-export const ChaptersContainer = styled.ul``;
+export const ChaptersContainer = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+export const ChapterCell = styled.li`
+  color: ${COLOR.lightgrey2};
+  padding: 5px 13px;
+  cursor: pointer;
+  background-color: ${({ active }) =>
+    active === true ? BACKGROUND.white : BACKGROUND.transparent};
+
+  &:hover {
+    background-color: ${BACKGROUND.lightgrey1};
+  }
+
+  &:active {
+    background-color: ${BACKGROUND.white};
+  }
+`;

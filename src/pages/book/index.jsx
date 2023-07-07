@@ -15,11 +15,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { initializeApp } from 'firebase/app';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { v4 as uuid } from 'uuid';
 
-import { firebaseConfig } from '../../firebase/config.js';
-
+import {
+  FirestoreChapterManager,
+  FirestoreSupportedTranslationLanguageManager,
+} from '../../firebase/firestore-request.js';
 import LOGGER from '../../lib/logger/logger.js';
 
 import {
@@ -52,24 +53,14 @@ function SignIn() {
 }
 
 function UserAction() {
-  initializeApp(firebaseConfig);
-
-  const db = getFirestore();
   const [language, setLanguage] = useState('en');
   const [languages, setLanguages] = useState([]);
 
   useEffect(() => {
-    async function getDocuments() {
-      const querySnapshot = await getDocs(
-        collection(db, 'supported_translation_languages')
-      );
-      const languages = [];
-      querySnapshot.forEach((doc) => {
-        languages.push({ ...doc.data()['language'] });
-      });
-      setLanguages(languages);
-    }
-    getDocuments();
+    const languageManager = new FirestoreSupportedTranslationLanguageManager();
+    languageManager.getSupportedTranslationLanguages((languages) =>
+      setLanguages(languages)
+    );
   }, []);
 
   return (
@@ -95,40 +86,165 @@ function UserAction() {
   );
 }
 
-function Book({ debug = true }) {
-  const [textEditorCount, setTextEditorCount] = useState(0);
-
+function Page({ ...props }) {
   const logger = new LOGGER(
-    Book.name,
-    debug === true ? LOGGER.DEBUG : LOGGER.OFF
+    Page.name,
+    props?.debug === true ? LOGGER.DEBUG : LOGGER.OFF
   );
 
-  const handleAddTextCell = () => {
-    setTextEditorCount(textEditorCount + 1);
+  const { selectedChapterContents, setSelectedChapterContents } = props;
+
+  const isSelectedChapterContentsEmpty =
+    selectedChapterContents === null || selectedChapterContents === undefined
+      ? true
+      : selectedChapterContents?.data.data === null ||
+        selectedChapterContents?.data.data === undefined ||
+        selectedChapterContents?.data.data === ''
+      ? true
+      : false;
+  const [isEditableTextCellVisible, setIsEditableTextCellVisible] = useState(
+    !isSelectedChapterContentsEmpty
+  );
+
+  const onCloseTextEditor = () => {
+    const isConfirmedDeleteOperation = window.confirm(
+      'Confirm delete operation. This operation cannot be recovered.'
+    );
+    logger.info(
+      `Received delete operation confirmation bit "${isConfirmedDeleteOperation}".`
+    );
+
+    const chapterManager = new FirestoreChapterManager();
+
+    chapterManager.lockForDocId(selectedChapterContents.id);
+    chapterManager.setChapterInfo({
+      name: selectedChapterContents.data.name,
+      data: '',
+    });
+
+    setSelectedChapterContents({
+      id: selectedChapterContents.id,
+      data: {
+        name: selectedChapterContents.data.name,
+        data: '',
+      },
+    });
   };
-  const handleCloseTextEditor = (index) => {
-    const context = { index };
-    logger.debug(null, context);
-    setTextEditorCount(textEditorCount - 1);
+
+  const onSave = ({ html, text }) => {
+    const chapterManager = new FirestoreChapterManager();
+
+    chapterManager.lockForDocId(selectedChapterContents.id);
+    chapterManager.setChapterInfo({
+      name: selectedChapterContents.data.name,
+      data: text,
+    });
+
+    setSelectedChapterContents({
+      id: selectedChapterContents.id,
+      data: {
+        name: selectedChapterContents.data.name,
+        data: text,
+      },
+    });
   };
+
+  return (
+    <>
+      {isEditableTextCellVisible === false && (
+        <AddTextCell onAddTextCell={() => setIsEditableTextCellVisible(true)} />
+      )}
+      {isEditableTextCellVisible === true && (
+        <TextEditor
+          text={selectedChapterContents?.data.data}
+          view={{
+            md: isSelectedChapterContentsEmpty,
+            menu: isSelectedChapterContentsEmpty,
+            html: !isSelectedChapterContentsEmpty,
+          }}
+          onChange={({ html, text }) => console.log(html, text)}
+          onCloseTextEditor={onCloseTextEditor}
+          onSave={onSave}
+        />
+      )}
+    </>
+  );
+}
+
+function Book({ ...props }) {
+  const logger = new LOGGER(
+    Book.name,
+    props?.debug === true ? LOGGER.DEBUG : LOGGER.OFF
+  );
+
+  const [chapters, setChapters] = useState([]);
+
+  const [selectedChapter, setSelectedChapter] = useState(null);
+  const [selectedChapterContents, setSelectedChapterContents] = useState(null);
+
+  useEffect(() => {
+    const chapterManager = new FirestoreChapterManager();
+    chapterManager.getChapterList((chapters) => setChapters(chapters));
+
+    if (chapters.length > 0) {
+      logger.info(
+        `Request to firestore granted for "chapters". Received ${JSON.stringify(
+          chapters
+        )}`
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (chapters === null || chapters === undefined || chapters.length <= 0) {
+      return;
+    }
+
+    const lastSelectedChapter = localStorage.getItem('lastselectedchapter');
+    logger.info(`Cached "${lastSelectedChapter}" from the local storage.`);
+
+    if (lastSelectedChapter === null || lastSelectedChapter === undefined) {
+      setSelectedChapter(chapters[0]);
+    } else {
+      setSelectedChapter(JSON.parse(lastSelectedChapter));
+    }
+  }, [chapters]);
+
+  useEffect(() => {
+    if (selectedChapter === null || selectedChapter === undefined) return;
+
+    localStorage.setItem(
+      'lastselectedchapter',
+      JSON.stringify(selectedChapter)
+    );
+    logger.info(
+      `Caching "${JSON.stringify(selectedChapter)}" to the local storage.`
+    );
+
+    const chapterManager = new FirestoreChapterManager();
+    chapterManager.lockForDocId(selectedChapter.id, { override: true });
+    chapterManager.getChapterInfo(({ id, data }) => {
+      setSelectedChapterContents({ id, data });
+    });
+  }, [selectedChapter]);
 
   return (
     <Container>
       <Navbar rightChild={<UserAction />} />
       <BookContainer>
         <MenuContainer>
-          <ChapterIndex />
+          <ChapterIndex
+            selectedChapter={selectedChapter}
+            setSelectedChapter={setSelectedChapter}
+            chapters={chapters}
+            setChapters={setChapters}
+          />
         </MenuContainer>
         <ChapterContainer>
-          <AddTextCell onAddTextCell={handleAddTextCell} />
-          {Array.from({ length: textEditorCount }, (_, index) => (
-            <React.Fragment key={index}>
-              <TextEditor
-                onCloseTextEditor={() => handleCloseTextEditor(index)}
-              />
-              <AddTextCell onAddTextCell={handleAddTextCell} />
-            </React.Fragment>
-          ))}
+          <Page
+            selectedChapterContents={selectedChapterContents}
+            setSelectedChapterContents={setSelectedChapterContents}
+          />
         </ChapterContainer>
         <OnThisPageContainer></OnThisPageContainer>
       </BookContainer>

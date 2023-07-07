@@ -40,7 +40,7 @@ import { TextAreaContainer } from './styles/styles.jsx';
 
 const mdParser = new MarkdownIt();
 
-function TextEditor({ onCloseTextEditor }) {
+function TextEditor({ text, view, onChange, onCloseTextEditor }) {
   MarkdownEditor.usePlugin(Header);
   MarkdownEditor.usePlugin(Bold);
   MarkdownEditor.usePlugin(Italic);
@@ -61,9 +61,10 @@ function TextEditor({ onCloseTextEditor }) {
   return (
     <TextAreaContainer>
       <MarkdownEditor
+        text={text}
         renderHTML={(text) => mdParser.render(text)}
-        onChange={({ html, text }) => console.log(html, text)}
-        view={{ md: true, menu: true, html: false }}
+        onChange={onChange}
+        view={{ md: true, menu: true, html: false, ...view }}
       />
     </TextAreaContainer>
   );

@@ -24,7 +24,7 @@ import { getUploadPlaceholder } from '../utils/uploadPlaceholder.js';
 import { Divider as DividerPlugin } from '../plugins/index.jsx';
 import Emitter, { globalEventEmitter } from '../share/emitter.js';
 import { NavigationBar, Icon, Toolbar } from '../components/index.jsx';
-import { isKeyMatch, isPromise, getLineAndCol } from '../utils/tools.js';
+import { isKeyMatch, getLineAndCol } from '../utils/tools.js';
 
 import LOGGER from '../../../lib/logger/logger.js';
 import { defaultConfigs } from './configs.js';
@@ -208,13 +208,6 @@ function MarkdownEditor({ ...props }) {
     if (e.detail === 2) setView({ ...view, md: true, menu: true, html: false });
   };
 
-  const setHtmlState = (html) => {
-    return new Promise((resolve) => {
-      setHtml(html);
-      resolve(html);
-    });
-  };
-
   const renderHTML = (text) => {
     if (typeof props.renderHTML === 'undefined') {
       logger.error(
@@ -224,9 +217,7 @@ function MarkdownEditor({ ...props }) {
     }
 
     const html = props.renderHTML(text);
-    if (isPromise(html)) return html.then((html) => setHtmlState(html));
-    else if (typeof html === 'function') return setHtmlState(html());
-    else return setHtmlState(html);
+    setHtml(html);
   };
 
   useEffect(() => {
@@ -400,13 +391,11 @@ function MarkdownEditor({ ...props }) {
     if (selection) setTimeout(() => setSelection(selection));
     if (hasContentChanged === false) hasContentChanged = true;
 
-    const rendering = renderHTML(text);
     if (onChangeTrigger === 'both' || onChangeTrigger === 'afterRender') {
-      rendering.then(() => {
-        if (props?.onChange) {
-          props.onChange({ text, html: getHtmlValue() }, event);
-        }
-      });
+      renderHTML(text);
+      if (props?.onChange) {
+        props.onChange({ text, html: getHtmlValue() }, event);
+      }
     }
   };
 
@@ -499,59 +488,9 @@ function MarkdownEditor({ ...props }) {
   };
   MarkdownEditor.insertMarkdown = insertMarkdown;
 
-  const uploadWithDataTransfer = (items) => {
-    const { onImageUpload } = configs;
-
-    const promiseQueue = [];
-    Array.prototype.forEach.call(items, (item) => {
-      if (
-        item.kind === 'file' &&
-        item.type.includes('image') &&
-        configs.allowPasteImage &&
-        typeof onImageUpload === 'function'
-      ) {
-        const file = item.getAsFile();
-        if (typeof file === 'undefined') return;
-
-        const placeholder = getUploadPlaceholder(file, onImageUpload);
-        promiseQueue.push(Promise.resolve(placeholder.placeholder));
-
-        placeholder.uploaded.then((string) => {
-          const $text = text.replace(placeholder.placeholder, string);
-          const $offset = string.length - placeholder.placeholder.length;
-          const $selection = getSelection();
-
-          setMarkdownText($text, undefined, {
-            start: $selection.start + $offset,
-            end: $selection.end + $offset,
-          });
-        });
-      } else if (item.kind === 'string' && item.type === 'text/plain') {
-        promiseQueue.push(
-          new Promise((resolve) => {
-            item.getAsString(resolve);
-          })
-        );
-      }
-    });
-
-    Promise.all(promiseQueue).then((result) => {
-      const text = result.join('');
-      const selection = getSelection();
-
-      insertMarkdownText(text, true, {
-        start: selection.start === selection.end ? text.length : 0,
-        end: text.length,
-      });
-    });
-  };
-
   const handleDrop = (e) => {
-    if (!configs?.onImageUpload) return;
-    const event = e.nativeEvent;
-    if (!event?.dataTransfer || !event?.dataTransfer?.items) return;
     e.preventDefault();
-    uploadWithDataTransfer(event.dataTransfer.items);
+    // @TODO: Handle drop event.
   };
 
   let scrollScale = 1;
@@ -661,11 +600,8 @@ function MarkdownEditor({ ...props }) {
   };
 
   const handlePaste = (e) => {
-    const event = e.nativeEvent;
-    const items = (event.clipboardData || window?.clipboardData).items;
-    if (!items) return;
     e.preventDefault();
-    uploadWithDataTransfer(items);
+    // @TODO: Handle paste event.
   };
 
   const handleToggleMenu = (e) => {

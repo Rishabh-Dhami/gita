@@ -12,42 +12,103 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, { useState } from 'react';
 
+import { Input } from '../search-box/index.jsx';
 import { SearchBox } from '../index.jsx';
+
+import { FirestoreChapterManager } from '../../firebase/firestore-request.js';
 
 import {
   ChapterCell,
   ChaptersContainer,
   ChapterIndexContainer,
-  ChapterIndexFilterContainer,
+  ChapterIndexActionContainer,
+  ChapterAddButton,
 } from './styles/styles.jsx';
 
-function ChapterIndex({ selectedChapter, setSelectedChapter, chapters }) {
+function ChapterIndex({
+  selectedChapter,
+  setSelectedChapter,
+  chapters,
+  setChapters,
+}) {
+  const [newChapterName, setNewChapterName] = useState('');
+  const [addChapterEvent, setAddChapterEvent] = useState('deactive');
+
+  const executeAddChapterEvent = (e) => {
+    setAddChapterEvent('active');
+  };
+
+  const handleQuickSubmit = (e) => {
+    if (e.key !== 'Enter' || e.keyCode !== 13) return;
+
+    const firestoreChapterManager = new FirestoreChapterManager();
+    if (/\S/.test(newChapterName)) {
+      firestoreChapterManager.addNewChapter(
+        {
+          name: newChapterName,
+          data: '',
+        },
+        (docRef) => {
+          setChapters([...chapters, { id: docRef.id, name: newChapterName }]);
+        }
+      );
+    }
+
+    setNewChapterName('');
+    setAddChapterEvent('deactive');
+  };
+
   return (
     <ChapterIndexContainer>
-      <ChapterIndexFilterContainer>
-        <SearchBox
-          placeholder="Search"
-          name="Filter Chapter"
-          data={chapters}
-          fuseConfigs={{}}
-          autoFocus={false}
-          onSelect={(record) => record}
-          inputBackgroundColor="#f1f3f4"
-          inputBorderColor="#f1f3f4"
-          inputFontSize="16px"
-        />
-      </ChapterIndexFilterContainer>
+      <ChapterIndexActionContainer>
+        {addChapterEvent === 'deactive' ? (
+          <SearchBox
+            placeholder="Search"
+            name="Filter Chapter"
+            data={chapters}
+            fuseConfigs={{}}
+            autoFocus={false}
+            onSelect={(record) => record}
+            inputBackgroundColor="#f1f3f4"
+            inputBorderColor="#f1f3f4"
+            inputFontSize="16px"
+          />
+        ) : (
+          <Input
+            placeholder="Chapter Name"
+            name=""
+            value={newChapterName}
+            onChange={(e) => setNewChapterName(e.target.value)}
+            autoFocus={false}
+            onFocus={() => {}}
+            inputFontColor="#000"
+            inputBorderColor="#cacaca96"
+            inputFontSize="14px"
+            inputHeight="40px"
+            iconBoxSize="24px"
+            onKeyDown={handleQuickSubmit}
+            type="text"
+          />
+        )}
+        <ChapterAddButton onClick={executeAddChapterEvent}>+</ChapterAddButton>
+      </ChapterIndexActionContainer>
       <ChaptersContainer>
         {chapters &&
-          chapters.map((chapter) => (
+          chapters.map(({ id, name }) => (
             <ChapterCell
-              key={chapter}
-              active={chapter === selectedChapter}
-              onClick={(e) => setSelectedChapter(e.target.getAttribute('key'))}
+              key={id}
+              id={id}
+              active={id === selectedChapter?.id}
+              onClick={(e) => {
+                setSelectedChapter({
+                  id: e.target.getAttribute('id'),
+                  name: e.target.innerText,
+                });
+              }}
             >
-              {chapter}
+              {name}
             </ChapterCell>
           ))}
       </ChaptersContainer>

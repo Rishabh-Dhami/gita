@@ -16,7 +16,7 @@ import mergeConfigs from '../../utils/merge-configs.js';
 
 describe('mergeConfigs', () => {
   const defaultConfigs = {
-    name: 'Rupika Nautiyal',
+    name: 'Rupika',
     age: 19,
     address: {
       street: 'G.M.S Road',
@@ -27,7 +27,7 @@ describe('mergeConfigs', () => {
   };
 
   const configs1 = {
-    name: 'Sakshi Nautiyal',
+    name: 'Sakshi',
     address: {
       street: 'G.M.S Road',
     },
@@ -46,7 +46,7 @@ describe('mergeConfigs', () => {
 
   describe('mergedConfigs', () => {
     it('contains all properties from defaultConfigs and both additional configs', () => {
-      expect(mergedConfigs.name).toBe('Sakshi Nautiyal');
+      expect(mergedConfigs.name).toBe('Sakshi');
       expect(mergedConfigs.age).toBe(20);
       expect(mergedConfigs.address.street).toBe('G.M.S Road');
       expect(mergedConfigs.address.city).toBe('Lost World');

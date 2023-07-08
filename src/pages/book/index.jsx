@@ -116,38 +116,56 @@ function Page({ ...props }) {
 
     const chapterManager = new FirestoreChapterManager();
 
-    chapterManager.lockForDocId(selectedChapterContents.id);
-    chapterManager.setChapterInfo({
-      name: selectedChapterContents.data.name,
-      data: '',
+    chapterManager.lockForDocId(selectedChapterContents.id, {
+      override: true,
     });
-
-    setSelectedChapterContents({
-      id: selectedChapterContents.id,
-      data: {
+    chapterManager.setChapterInfo(
+      {
         name: selectedChapterContents.data.name,
         data: '',
+        position: selectedChapterContents.data.position,
+        isSelected: selectedChapterContents.data.isSelected,
       },
-    });
+      ({ id, data }) => {
+        setSelectedChapterContents({
+          id: id,
+          data: {
+            ...data,
+            name: data.name,
+            data: data.data,
+          },
+        });
+      }
+    );
   };
 
   const onSave = ({ html, text }) => {
     const chapterManager = new FirestoreChapterManager();
 
-    chapterManager.lockForDocId(selectedChapterContents.id);
-    chapterManager.setChapterInfo({
-      name: selectedChapterContents.data.name,
-      data: text,
+    chapterManager.lockForDocId(selectedChapterContents.id, {
+      override: true,
     });
-
-    setSelectedChapterContents({
-      id: selectedChapterContents.id,
-      data: {
+    chapterManager.setChapterInfo(
+      {
         name: selectedChapterContents.data.name,
         data: text,
+        position: selectedChapterContents.data.position,
+        isSelected: selectedChapterContents.data.isSelected,
       },
-    });
+      ({ id, data }) => {
+        setSelectedChapterContents({
+          id: id,
+          data: {
+            ...data,
+            name: data.name,
+            data: data.data,
+          },
+        });
+      }
+    );
   };
+
+  useEffect(() => {}, [selectedChapterContents]);
 
   return (
     <>
@@ -241,10 +259,12 @@ function Book({ ...props }) {
           />
         </MenuContainer>
         <ChapterContainer>
-          <Page
-            selectedChapterContents={selectedChapterContents}
-            setSelectedChapterContents={setSelectedChapterContents}
-          />
+          {selectedChapterContents && (
+            <Page
+              selectedChapterContents={selectedChapterContents}
+              setSelectedChapterContents={setSelectedChapterContents}
+            />
+          )}
         </ChapterContainer>
         <OnThisPageContainer></OnThisPageContainer>
       </BookContainer>

@@ -22,6 +22,25 @@ export const ChapterIndexContainer = styled.div`
   height: 100%;
   position: fixed;
   background-color: ${BACKGROUND.white};
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50px;
+  }
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: #e3e2e1;
+  }
 `;
 
 export const ChapterIndexActionContainer = styled.div`
@@ -54,6 +73,7 @@ export const ChapterAddButton = styled.div`
 export const ChaptersContainer = styled.ul`
   list-style-type: none;
   padding: 0;
+  padding-bottom: 50px;
 `;
 
 export const ChapterCell = styled.li`

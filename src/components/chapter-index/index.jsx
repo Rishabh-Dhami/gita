@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Input } from '../search-box/index.jsx';
 import { SearchBox } from '../index.jsx';
@@ -36,6 +36,10 @@ function ChapterIndex({
   const [newChapterName, setNewChapterName] = useState('');
   const [addChapterEvent, setAddChapterEvent] = useState('deactive');
 
+  useEffect(() => {
+    if (chapters.length > 0) chapters.sort((a, b) => a.position - b.position);
+  }, [chapters]);
+
   const executeAddChapterEvent = (e) => {
     setAddChapterEvent('active');
   };
@@ -49,9 +53,19 @@ function ChapterIndex({
         {
           name: newChapterName,
           data: '',
+          position: chapters.length,
+          isSelected: true,
         },
         (docRef) => {
-          setChapters([...chapters, { id: docRef.id, name: newChapterName }]);
+          setChapters([
+            ...chapters,
+            {
+              id: docRef.id,
+              name: newChapterName,
+              position: chapters.length,
+              isSelected: true,
+            },
+          ]);
         }
       );
     }
@@ -96,11 +110,11 @@ function ChapterIndex({
       </ChapterIndexActionContainer>
       <ChaptersContainer>
         {chapters &&
-          chapters.map(({ id, name }) => (
+          chapters.map(({ id, name, isSelected }) => (
             <ChapterCell
               key={id}
               id={id}
-              active={id === selectedChapter?.id}
+              active={isSelected}
               onClick={(e) => {
                 setSelectedChapter({
                   id: e.target.getAttribute('id'),

@@ -56,7 +56,7 @@ function TextEditor({ text, view, onChange, onCloseTextEditor }) {
   MarkdownEditor.usePlugin(Link);
   MarkdownEditor.usePlugin(Clear);
   MarkdownEditor.usePlugin(Logger);
-  MarkdownEditor.usePlugin(Close, { onCloseMarkdownEditor: onCloseTextEditor });
+  MarkdownEditor.usePlugin(Close, { onCloseTextEditor });
 
   return (
     <TextAreaContainer>

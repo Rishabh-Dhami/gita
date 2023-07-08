@@ -21,13 +21,13 @@ Close.pluginName = 'close';
 Close.align = 'right';
 
 function Close({ ...props }) {
-  const { onCloseMarkdownEditor } = props;
+  const { onCloseTextEditor } = props.configs;
 
   return (
     <span
       className="button"
       title={i18n.get('btnClose')}
-      onClick={onCloseMarkdownEditor}
+      onClick={onCloseTextEditor}
     >
       <Icon type="close" />
     </span>

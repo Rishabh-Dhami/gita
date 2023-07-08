@@ -17,6 +17,7 @@ import {
   collection,
   doc,
   getDocs,
+  setDoc,
   addDoc,
   getFirestore,
 } from 'firebase/firestore';
@@ -67,6 +68,8 @@ export class FirestoreChapterManager {
       this._chapterList.push({
         id: doc.id,
         name: doc.data()['name'],
+        position: doc.data()['position'],
+        isSelected: doc.data()['isSelected'],
       });
     });
 
@@ -98,6 +101,8 @@ export class FirestoreChapterManager {
 
       this._chapterInfo['name'] = chapterContents['name'];
       this._chapterInfo['data'] = chapterContents['data'];
+      this._chapterInfo['position'] = chapterContents['position'];
+      this._chapterInfo['isSelected'] = chapterContents['isSelected'];
     });
 
     callback({ id: this._docId, data: this._chapterInfo });
@@ -113,30 +118,39 @@ export class FirestoreChapterManager {
    *
    * @returns DocumentReference
    */
-  async addNewChapter({ name, data }, callback) {
+  async addNewChapter({ name, data, position, isSelected }, callback) {
     const docRef = await addDoc(collection(this._db, 'chapters'), {
       name,
       data,
+      position,
+      isSelected,
     });
 
     this._forceUpdateChapterList = true;
-    this._chapterList = this.getChapterList();
+    await this.getChapterList((chapterList) => {
+      this._chapterList = chapterList;
+    });
     callback(docRef);
   }
 
-  async setChapterInfo({ name, data }, callback) {
+  async setChapterInfo({ name, data, position, isSelected }, callback) {
     await setDoc(
       doc(this._db, 'chapters', this._docId),
       {
         name,
         data,
+        position,
+        isSelected,
       },
       { merge: true }
     );
 
     this._forceUpdateChapterInfo = true;
-    this._chapterInfo = this.getChapterInfo();
-    callback(this._docId);
+    await this.getChapterInfo(({ id, data }) => {
+      this._docId = id;
+      this._chapterInfo = data;
+    });
+    callback({ id: this._docId, data: this._chapterInfo });
   }
 }
 

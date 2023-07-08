@@ -82,12 +82,21 @@ function ChapterIndex({
             placeholder="Search"
             name="Filter Chapter"
             data={chapters}
-            fuseConfigs={{}}
+            fuseConfigs={{ keys: ['name'] }}
             autoFocus={false}
             onSelect={(record) => record}
             inputBackgroundColor="#f1f3f4"
             inputBorderColor="#f1f3f4"
             inputFontSize="16px"
+            clearOnSelect={true}
+            onSelect={(record) => {
+              setSelectedChapter({
+                id: record.item.id,
+                name: record.item.name,
+                position: record.item.position,
+                isSelected: true,
+              });
+            }}
           />
         ) : (
           <Input
@@ -119,6 +128,7 @@ function ChapterIndex({
                 setSelectedChapter({
                   id: e.target.getAttribute('id'),
                   name: e.target.innerText,
+                  isSelected: true,
                 });
               }}
             >

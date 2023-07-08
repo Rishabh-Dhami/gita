@@ -43,22 +43,22 @@ function Dropdown({
       dropdownBorderColor={dropdownBorderColor}
     >
       <ul>
-        {matchedRecords.map((record) => {
-          return (
-            <li
-              key={record.item.key}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (['Space', 'Enter'].includes(e.code)) {
-                  onClick(record);
-                }
-              }}
-              onClick={() => onClick(record)}
-            >
-              {record.item.value}
-            </li>
-          );
-        })}
+        {matchedRecords.map((record) => (
+          <li
+            key={record.item.id}
+            tabIndex={0}
+            onClick={() => {
+              onClick(record);
+            }}
+            onKeyDown={(e) => {
+              if (['Space', 'Enter'].includes(e.code)) {
+                onClick(record);
+              }
+            }}
+          >
+            {record.item.name}
+          </li>
+        ))}
       </ul>
     </StyledDropdown>
   );

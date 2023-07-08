@@ -31,7 +31,7 @@ export const StyledDropdown = styled.div`
       padding: 10px 20px;
       background-color: ${BACKGROUND.white};
       border: 1px solid ${({ dropdownBorderColor }) => dropdownBorderColor};
-      height: 40px;
+      height: fit-content;
       display: flex;
       align-items: center;
 

@@ -22,9 +22,9 @@ import mergeConfigs from '../utils/merge-configs.js';
 import { decorateIt } from '../utils/decorate.js';
 import { getUploadPlaceholder } from '../utils/uploadPlaceholder.js';
 import { Divider as DividerPlugin } from '../plugins/index.jsx';
+import { isKeyMatch, getLineAndCol } from '../utils/tools.js';
 import Emitter, { globalEventEmitter } from '../share/emitter.js';
 import { NavigationBar, Icon, Toolbar } from '../components/index.jsx';
-import { isKeyMatch, getLineAndCol } from '../utils/tools.js';
 
 import LOGGER from '../../../lib/logger/logger.js';
 import { defaultConfigs } from './configs.js';
@@ -82,8 +82,17 @@ MarkdownEditor.unuseAllPlugins = () => {
   MarkdownEditor.Plugins = [];
 };
 
+// This object will help in emitting events globally and executing respective
+// registered functions to those events.
+//
+// All of the event functions are registered using the `MarkdownEditor.on`
+// function and can be un-registered with the `MarkdownEditor.off` function.
 MarkdownEditor.emitter = new Emitter();
 
+/**
+ * @function _eventType() - Private function translates event string to `Emitter`
+ *                          event.
+ */
 MarkdownEditor._eventType = (event) => {
   switch (event) {
     case 'change':
@@ -105,34 +114,60 @@ MarkdownEditor._eventType = (event) => {
   }
 };
 
+/**
+ * @function on() - Registry function for events with their respective callback.
+ *
+ * This function binds a event with the event listener function and calls that
+ * function on the event emittion.
+ */
 MarkdownEditor.on = (event, callback) => {
   const eventType = MarkdownEditor._eventType(event);
   if (eventType) MarkdownEditor.emitter.on(eventType, callback);
 };
 
+/**
+ * @function off() - Un-registers the event function.
+ *
+ * This function unbinds the event listener function from a event, so despite of
+ * the event being emitted this function will not be executed.
+ */
 MarkdownEditor.off = (event, callback) => {
   const eventType = MarkdownEditor._eventType(event);
   if (eventType) MarkdownEditor.emitter.off(eventType, callback);
 };
 
+// Global list of keyboard listeners.
+//
+// A keyboard listener consists of the key to which it must respond and its key
+// code, also it consists of list of keys that could be included with a keydown
+// event and finally a callback that will respond to the keydown event.
+//
+// listener = {key, keyCode, aliasCommand, withKey, callback}
 MarkdownEditor.keyboardListeners = [];
 
-MarkdownEditor.onKeyboard = (data) => {
-  if (Array.isArray(data)) {
-    data.forEach((it) => onKeyboard(it));
+/**
+ * @function onKeyboard() - Registers a listener in the `keyboardListeners` list.
+ */
+MarkdownEditor.onKeyboard = (listener) => {
+  if (Array.isArray(listener)) {
+    listener.forEach((it) => onKeyboard(it));
     return;
   }
-  if (!MarkdownEditor.keyboardListeners.includes(data)) {
-    MarkdownEditor.keyboardListeners.push(data);
+  if (!MarkdownEditor.keyboardListeners.includes(listener)) {
+    MarkdownEditor.keyboardListeners.push(listener);
   }
 };
 
-MarkdownEditor.offKeyboard = (data) => {
-  if (Array.isArray(data)) {
-    data.forEach((it) => offKeyboard(it));
+/**
+ * @function offKeyboard() - Unregisters a listener from the `keyboardListeners`
+ *                           list.
+ */
+MarkdownEditor.offKeyboard = (listener) => {
+  if (Array.isArray(listener)) {
+    listener.forEach((it) => offKeyboard(it));
     return;
   }
-  const index = MarkdownEditor.keyboardListeners.indexOf(data);
+  const index = MarkdownEditor.keyboardListeners.indexOf(listener);
   if (index >= 0) {
     MarkdownEditor.keyboardListeners.splice(index, 1);
   }
@@ -140,8 +175,8 @@ MarkdownEditor.offKeyboard = (data) => {
 
 MarkdownEditor.PluginApis = new Map();
 
-MarkdownEditor.registerPluginApi = (name, cb) => {
-  MarkdownEditor.PluginApis.set(name, cb);
+MarkdownEditor.registerPluginApi = (name, callback) => {
+  MarkdownEditor.PluginApis.set(name, callback);
 };
 
 MarkdownEditor.unregisterPluginApi = (name) => {
@@ -189,50 +224,7 @@ function MarkdownEditor({ ...props }) {
   const handleOnSave = () => {
     displayPreview();
     const { onSave } = props;
-    if (typeof onSave === 'function') {
-      onSave({ text: nodeMdText.current.value });
-    }
-  };
-
-  const handleKeyboard = {
-    key: 'Enter',
-    keyCode: 13,
-    aliasCommand: true,
-    withKey: ['ctrlKey', 'shiftKey'],
-    callback: () => handleOnSave(),
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isKeyMatch(e, handleKeyboard)) {
-        e.preventDefault();
-        handleKeyboard.callback(e);
-        return;
-      }
-      MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_KEY_DOWN, e);
-    };
-    typeof markdownEditor.current !== 'undefined' &&
-      markdownEditor.current.addEventListener('keydown', handleKeyDown);
-    return () => {
-      typeof markdownEditor.current !== 'undefined' &&
-        markdownEditor.current.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
-
-  const handleFocus = (e) => {
-    const { onFocus } = props;
-    if (typeof onFocus === 'function') onFocus(e);
-    MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_FOCUS, e);
-  };
-
-  const handleBlur = (e) => {
-    const { onBlur } = props;
-    if (typeof onBlur === 'function') onBlur(e);
-    MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_BLUR, e);
-  };
-
-  const handleClick = (e) => {
-    if (e.detail === 2) setView({ ...view, md: true, menu: true, html: false });
+    if (typeof onSave === 'function') onSave({ text });
   };
 
   const renderHTML = (text) => {
@@ -246,42 +238,6 @@ function MarkdownEditor({ ...props }) {
     const html = props.renderHTML(text);
     setHtml(html);
   };
-
-  useEffect(() => {
-    renderHTML(text);
-    globalEventEmitter.on(
-      globalEventEmitter.EVENT_LANG_CHANGE,
-      handleLocaleUpdate
-    );
-    i18n.setUp();
-
-    return () => {
-      globalEventEmitter.off(
-        globalEventEmitter.EVENT_LANG_CHANGE,
-        handleLocaleUpdate
-      );
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof props.text === 'undefined' || props.text === text) return;
-    let value = props.text;
-    if (typeof value !== 'string') value = String(value).toString();
-    value = value.replace(/↵/g, '\n');
-    if (text !== value) {
-      setText(value);
-      renderHTML(value);
-    }
-  }, [props.text]);
-
-  useEffect(() => {
-    let value = text;
-    value = value.replace(/↵/g, '\n');
-    if (text !== value) {
-      setText(value);
-      renderHTML(value);
-    }
-  }, [text]);
 
   const getPlugins = () => {
     let plugins = [];
@@ -351,23 +307,6 @@ function MarkdownEditor({ ...props }) {
       );
     });
     return result;
-  };
-
-  useEffect(() => {
-    if (props.plugins === plugins) return;
-    const $plugins = getPlugins();
-    setPlugins([...$plugins.left, ...$plugins.right]);
-  }, [props.plugins]);
-
-  const handleKeyDown = (e) => {
-    for (const listener of MarkdownEditor.keyboardListeners) {
-      if (isKeyMatch(e, listener)) {
-        e.preventDefault();
-        listener.callback(e);
-        return;
-      }
-    }
-    MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_KEY_DOWN, e);
   };
 
   const getSelection = () => {
@@ -516,56 +455,47 @@ function MarkdownEditor({ ...props }) {
   };
   MarkdownEditor.insertMarkdown = insertMarkdown;
 
-  let scrollScale = 1;
-  let isSyncingScroll = false;
-  let shouldSyncScroll = 'md';
+  /**
+   * @function focusEventHandler() - Executes `onFocus()` callback on the emittion
+   *                                 of 'focus' event.
+   *
+   * The callback `onFocus()` is also passed the event context.
+   */
+  const focusEventHandler = (e) => {
+    const { onFocus } = props;
+    if (typeof onFocus === 'function') onFocus(e);
+  };
 
-  const handleSyncScroll = (type, e) => {
-    if (type !== shouldSyncScroll) return;
-    if (typeof props.onScroll === 'function') props.onScroll(e, type);
-    MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_SCROLL, e, type);
+  /**
+   * @function blurEventHandler() - Executes `onBlur()` callback on the emittion
+   *                                of 'blur' event.
+   *
+   * The callback `onBlur()` is also passed the event context.
+   */
+  const blurEventHandler = (e) => {
+    const { onBlur } = props;
+    if (typeof onBlur === 'function') onBlur(e);
+  };
 
-    const { syncScrollMode = [] } = configs;
-    if (
-      !syncScrollMode.includes(
-        type === 'md' ? 'rightFollowLeft' : 'leftFollowRight'
-      )
-    ) {
-      return;
-    }
-    if (
-      hasContentChanged &&
-      nodeMdText.current &&
-      nodeMdPreviewWrapper.current
-    ) {
-      scrollScale =
-        nodeMdText.current.scrollHeight /
-        nodeMdPreviewWrapper.current.scrollHeight;
-      hasContentChanged = false;
-    }
-    if (!isSyncingScroll) {
-      isSyncingScroll = true;
-      requestAnimationFrame(() => {
-        if (nodeMdText.current && nodeMdPreviewWrapper.current) {
-          if (type === 'md') {
-            nodeMdPreviewWrapper.current.scrollTop =
-              nodeMdText.current.scrollTop / scrollScale;
-          } else {
-            nodeMdText.current.scrollTop =
-              nodeMdPreviewWrapper.current.scrollTop * scrollScale;
-          }
-        }
-        isSyncingScroll = false;
-      });
+  /**
+   * @function keydownEventHandler() - Handles the keydown events registered in
+   *                                   the `keyboardListeners`.
+   *
+   * All the registered listeners are registered with a callback attached so, if
+   * the current event corresponds to a key inside of a listener then that listener's
+   * callback will be executed with the current event context.
+   */
+  const keydownEventHandler = (e) => {
+    for (const listener of MarkdownEditor.keyboardListeners) {
+      if (isKeyMatch(e, listener)) {
+        e.preventDefault();
+        listener.callback(e);
+        return;
+      }
     }
   };
 
-  useEffect(() => {
-    nodeMdText.current.style.height = '';
-    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
-  }, [text]);
-
-  const handleEditorKeyDown = (e) => {
+  const editorKeyDownEventHandler = (e) => {
     const { keyCode, key, currentTarget } = e;
     if ((keyCode === 13 || key === 'Enter') && composing === false) {
       const currentPosition = currentTarget.selectionStart;
@@ -609,11 +539,15 @@ function MarkdownEditor({ ...props }) {
         return;
       }
     }
+  };
 
-    MarkdownEditor.emitter.emit(
-      MarkdownEditor.emitter.EVENT_EDITOR_KEY_DOWN,
-      e
-    );
+  MarkdownEditor.on('focus', focusEventHandler);
+  MarkdownEditor.on('blur', blurEventHandler);
+  MarkdownEditor.on('keydown', keydownEventHandler);
+  MarkdownEditor.on('editor_keydown', editorKeyDownEventHandler);
+
+  const handleClick = (e) => {
+    if (e.detail === 2) setView({ ...view, md: true, menu: true, html: false });
   };
 
   const handleDrop = (e) => {
@@ -635,6 +569,69 @@ function MarkdownEditor({ ...props }) {
     setView({ ...view, menu: !view.menu });
   };
 
+  useEffect(() => {
+    const handleKeyboard = {
+      key: 'Enter',
+      keyCode: 13,
+      aliasCommand: true,
+      withKey: ['ctrlKey', 'shiftKey'],
+      callback: () => handleOnSave(),
+    };
+    MarkdownEditor.onKeyboard(handleKeyboard);
+
+    return () => {
+      MarkdownEditor.offKeyboard(handleKeyboard);
+    };
+  }, []);
+
+  useEffect(() => {
+    renderHTML(text);
+    globalEventEmitter.on(
+      globalEventEmitter.EVENT_LANG_CHANGE,
+      handleLocaleUpdate
+    );
+    i18n.setUp();
+
+    return () => {
+      globalEventEmitter.off(
+        globalEventEmitter.EVENT_LANG_CHANGE,
+        handleLocaleUpdate
+      );
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof props.text === 'undefined' || props.text === text) return;
+
+    let value = props.text;
+    if (typeof value !== 'string') value = String(value).toString();
+
+    value = value.replace(/↵/g, '\n');
+    if (text !== value) {
+      setText(value);
+      renderHTML(value);
+    }
+  }, [props.text]);
+
+  useEffect(() => {
+    if (props.plugins === plugins) return;
+    const plugins_ = getPlugins();
+    setPlugins([...plugins_.left, ...plugins_.right]);
+  }, [props.plugins]);
+
+  useEffect(() => {
+    const value = text.replace(/↵/g, '\n');
+    if (text !== value) {
+      setText(value);
+      renderHTML(value);
+    }
+  }, [text]);
+
+  useEffect(() => {
+    nodeMdText.current.style.height = '';
+    nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
+  }, [text]);
+
   const isShowMenu = !!view.menu;
   const showHideMenu =
     configs.canView && configs.canView.hideMenu && !configs.canView.menu;
@@ -643,7 +640,9 @@ function MarkdownEditor({ ...props }) {
     <MarkdownEditorContainer
       ref={markdownEditor}
       className={fullScreen ? 'full' : ''}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(e) => {
+        MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_KEY_DOWN, e);
+      }}
       onDrop={handleDrop}
     >
       {isShowMenu && (
@@ -672,26 +671,31 @@ function MarkdownEditor({ ...props }) {
             value={text}
             wrap="hard"
             onChange={handleChange}
-            onScroll={(e) => handleSyncScroll('md', e)}
-            onMouseOver={() => (shouldSyncScroll = 'md')}
-            onKeyDown={handleEditorKeyDown}
+            onKeyDown={(e) => {
+              MarkdownEditor.emitter.emit(
+                MarkdownEditor.emitter.EVENT_EDITOR_KEY_DOWN,
+                e
+              );
+            }}
             onCompositionStart={() => (composing = true)}
             onCompositionEnd={() => (composing = false)}
             onPaste={handlePaste}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            onFocus={(e) => {
+              MarkdownEditor.emitter.emit(
+                MarkdownEditor.emitter.EVENT_FOCUS,
+                e
+              );
+            }}
+            onBlur={(e) => {
+              MarkdownEditor.emitter.emit(MarkdownEditor.emitter.EVENT_BLUR, e);
+            }}
           />
         </MarkdownEditorTextAreaContainer>
         <MarkdownEditorPreviewContainer
           className={view.html === true ? 'visible' : 'in-visible'}
           onClick={handleClick}
         >
-          <div
-            className="preview-wrapper"
-            ref={nodeMdPreviewWrapper}
-            onMouseOver={() => (shouldSyncScroll = 'html')}
-            onScroll={(e) => handleSyncScroll('html', e)}
-          >
+          <div className="preview-wrapper" ref={nodeMdPreviewWrapper}>
             <HtmlRenderer html={html} innerRef={nodeMdPreview} />
           </div>
         </MarkdownEditorPreviewContainer>

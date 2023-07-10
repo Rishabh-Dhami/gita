@@ -28,7 +28,7 @@ function Italic({ ...props }) {
     keyCode: 73,
     aliasCommand: true,
     withKey: ['ctrlKey'],
-    callback: () => this.editor.insertMarkdown('italic'),
+    callback: () => editor.insertMarkdown('italic'),
   };
 
   useEffect(() => {

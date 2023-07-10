@@ -38,8 +38,21 @@ import {
   MarkdownEditorTextAreaContainer,
 } from './styles/styles.jsx';
 
+// Global object for storing `MarkdownEditor` plugins.
+//
+// All plugins are stored in the form of {component, configs}, where component
+// is the plugin itself and configs are its respective configurations.
+//
+// All of the `props` for the plugin component are stored in the `configs`
+// object.
 MarkdownEditor.Plugins = [];
 
+/**
+ * @function usePlugin() - Adds a plugin to the `MarkdownEditor`.
+ *
+ * If the function is called on the same component more than once then the
+ * component will update itself in the `Plugins` list.
+ */
 MarkdownEditor.usePlugin = (component, configs = {}) => {
   for (let i = 0; i < MarkdownEditor.Plugins.length; ++i) {
     if (MarkdownEditor.Plugins[i].component === component) {
@@ -50,6 +63,9 @@ MarkdownEditor.usePlugin = (component, configs = {}) => {
   MarkdownEditor.Plugins.push({ component, configs });
 };
 
+/**
+ * @function unusePlugin() - Removes a plugin from the `Plugins` list.
+ */
 MarkdownEditor.unusePlugin = (component) => {
   for (let i = 0; i < MarkdownEditor.Plugins.length; ++i) {
     if (MarkdownEditor.Plugins[i].component === component) {
@@ -59,6 +75,9 @@ MarkdownEditor.unusePlugin = (component) => {
   }
 };
 
+/**
+ * @function unuseAllPlugins() - Removes all the plugins from the `Plugins` list.
+ */
 MarkdownEditor.unuseAllPlugins = () => {
   MarkdownEditor.Plugins = [];
 };
@@ -167,12 +186,20 @@ function MarkdownEditor({ ...props }) {
     setView({ ...view, md: false, menu: false, html: true });
   };
 
+  const handleOnSave = () => {
+    displayPreview();
+    const { onSave } = props;
+    if (typeof onSave === 'function') {
+      onSave({ text: nodeMdText.current.value });
+    }
+  };
+
   const handleKeyboard = {
     key: 'Enter',
     keyCode: 13,
     aliasCommand: true,
     withKey: ['ctrlKey', 'shiftKey'],
-    callback: () => displayPreview(),
+    callback: () => handleOnSave(),
   };
 
   useEffect(() => {
@@ -404,94 +431,90 @@ function MarkdownEditor({ ...props }) {
     replaceSelected,
     selection = undefined
   ) => {
-    const $selection = getSelection();
-    const $beforeContent = text.slice(0, $selection.start);
-    const $afterContent = text.slice(
-      (replaceSelected && $selection.end) || $selection.start,
+    if (selection === undefined || selection === null) {
+      selection = getSelection();
+    }
+    const beforeContent = text.slice(0, selection.start);
+    const afterContent = text.slice(
+      (replaceSelected && selection.end) || selection.start,
       text.length
     );
 
     setMarkdownText(
-      `${$beforeContent}${value}${$afterContent}`,
+      `${beforeContent}${value}${afterContent}`,
       undefined,
       selection
         ? {
-            start: selection.start + $beforeContent.length,
-            end: selection.end + $beforeContent.length,
+            start: selection.start + beforeContent.length,
+            end: selection.end + beforeContent.length,
           }
-        : { start: $selection.start, end: $selection.start }
+        : { start: selection.start, end: selection.start }
     );
   };
 
   const insertMarkdown = (type, option = {}) => {
-    const $selection = getSelection();
-    let $decorateOption = (option && { ...option }) || {};
+    const selection = getSelection();
+    let decorateOption = (option && { ...option }) || {};
 
     switch (type) {
       case 'image': {
-        $decorateOption = {
-          ...$decorateOption,
-          target: option.target || $selection.text || '',
+        decorateOption = {
+          ...decorateOption,
+          target: option.target || selection.text || '',
           imageUrl: option.imageUrl || configs.imageUrl,
         };
         break;
       }
       case 'link': {
-        $decorateOption = {
-          ...$decorateOption,
+        decorateOption = {
+          ...decorateOption,
           linkUrl: configs.linkUrl,
         };
         break;
       }
       case 'tab': {
-        if ($selection.start == $selection.end) break;
-        const $lineStart =
-          nodeMdText.current.value
-            .slice(0, $selection.start)
-            .lastIndexOf('\n') + 1;
-        setSelection({ start: $lineStart, end: $selection.end });
+        if (selection.start == selection.end) break;
+        const lineStart =
+          nodeMdText.current.value.slice(0, selection.start).lastIndexOf('\n') +
+          1;
+        setSelection({ start: lineStart, end: selection.end });
         break;
       }
     }
 
-    const $decorate = decorateIt($selection.text, type, $decorateOption);
-    if ($decorate.newBlock) {
-      const $startLineInfo = getLineAndCol(
+    const decorate = decorateIt(selection.text, type, decorateOption);
+    if (decorate.newBlock) {
+      const startLineInfo = getLineAndCol(
         nodeMdText.current.value,
-        $selection.start
+        selection.start
       );
-      const { col, currentLine } = $startLineInfo;
+      const { col, currentLine } = startLineInfo;
       if (col > 0 && currentLine.length > 0) {
-        $decorate.text = `\n${$decorate.text}`;
-        if ($decorate.selection) {
-          ++$decorate.selection.start;
-          ++$decorate.selection.end;
+        decorate.text = `\n${decorate.text}`;
+        if (decorate.selection) {
+          ++decorate.selection.start;
+          ++decorate.selection.end;
         }
       }
-      if ($selection.start !== $selection.end) {
-        $startLineInfo.afterText = getLineAndCol(
+      if (selection.start !== selection.end) {
+        startLineInfo.afterText = getLineAndCol(
           nodeMdText.current.value,
-          $selection.end
+          selection.end
         ).afterText;
       }
       if (
-        $startLineInfo.afterText.trim() !== '' &&
-        $startLineInfo.afterText.substr(0, 2) !== '\n\n'
+        startLineInfo.afterText.trim() !== '' &&
+        startLineInfo.afterText.substr(0, 2) !== '\n\n'
       ) {
-        if ($startLineInfo.afterText.substr(0, 1) !== '\n') {
-          $decorate.text += '\n';
+        if (startLineInfo.afterText.substr(0, 1) !== '\n') {
+          decorate.text += '\n';
         }
-        $decorate.text += '\n';
+        decorate.text += '\n';
       }
     }
-    insertMarkdownText($decorate.text, true, $decorate.selection);
+    insertMarkdownText(decorate.text, true, decorate.selection);
   };
   MarkdownEditor.insertMarkdown = insertMarkdown;
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    // @TODO: Handle drop event.
-  };
 
   let scrollScale = 1;
   let isSyncingScroll = false;
@@ -542,27 +565,21 @@ function MarkdownEditor({ ...props }) {
     nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
   }, [text]);
 
-  const handleChange = (e) => {
-    e.persist();
-    setMarkdownText(e.target.value, e);
-  };
-
   const handleEditorKeyDown = (e) => {
     const { keyCode, key, currentTarget } = e;
     if ((keyCode === 13 || key === 'Enter') && composing === false) {
-      const $text = currentTarget.value;
-      const $currentPosition = currentTarget.selectionStart;
-      const $lineInfo = getLineAndCol($text, $currentPosition);
+      const currentPosition = currentTarget.selectionStart;
+      const lineInfo = getLineAndCol(currentTarget.value, currentPosition);
 
       const emptyCurrentLine = () => {
-        const $newValue =
+        const newValue =
           currentTarget.value.substr(
             0,
-            $currentPosition - $lineInfo.currentLine.length
-          ) + currentTarget.value.substr($currentPosition);
-        setMarkdownText($newValue, undefined, {
-          start: $currentPosition - $lineInfo.currentLine.length,
-          end: $currentPosition - $lineInfo.currentLine.length,
+            currentPosition - lineInfo.currentLine.length
+          ) + currentTarget.value.substr(currentPosition);
+        setMarkdownText(newValue, undefined, {
+          start: currentPosition - lineInfo.currentLine.length,
+          end: currentPosition - lineInfo.currentLine.length,
         });
         e.preventDefault();
       };
@@ -575,19 +592,19 @@ function MarkdownEditor({ ...props }) {
         e.preventDefault();
       };
 
-      const $isSymbol = $lineInfo.currentLine.match(/^(\s*?)\* /);
-      if ($isSymbol) {
-        if (/^(\s*?)\* $/.test($lineInfo.currentLine)) emptyCurrentLine();
-        else addSymbol($isSymbol[0]);
+      const isSymbol = lineInfo.currentLine.match(/^(\s*?)\* /);
+      if (isSymbol) {
+        if (/^(\s*?)\* $/.test(lineInfo.currentLine)) emptyCurrentLine();
+        else addSymbol(isSymbol[0]);
         return;
       }
 
-      const $isOrderList = $lineInfo.currentLine.match(/^(\s*?)(\d+)\. /);
-      if ($isOrderList) {
-        if (/^(\s*?)(\d+)\. $/.test($lineInfo.currentLine)) {
+      const isOrderList = lineInfo.currentLine.match(/^(\s*?)(\d+)\. /);
+      if (isOrderList) {
+        if (/^(\s*?)(\d+)\. $/.test(lineInfo.currentLine)) {
           emptyCurrentLine();
         } else {
-          addSymbol(`${$isOrderList[1]}${parseInt($isOrderList[2], 10) + 1}. `);
+          addSymbol(`${isOrderList[1]}${parseInt(isOrderList[2], 10) + 1}. `);
         }
         return;
       }
@@ -599,9 +616,19 @@ function MarkdownEditor({ ...props }) {
     );
   };
 
-  const handlePaste = (e) => {
+  const handleDrop = (e) => {
     e.preventDefault();
-    // @TODO: Handle paste event.
+    // @TODO: Handle drop event.
+  };
+
+  const handleChange = (e) => {
+    e.persist();
+    setMarkdownText(e.target.value, e);
+  };
+
+  const handlePaste = (e) => {
+    e.persist();
+    setMarkdownText(e.clipboardData.getData('Text'), e);
   };
 
   const handleToggleMenu = (e) => {

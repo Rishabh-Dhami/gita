@@ -121,10 +121,9 @@ function Page({ ...props }) {
     });
     chapterManager.setChapterInfo(
       {
+        ...selectedChapterContents.data,
         name: selectedChapterContents.data.name,
         data: '',
-        position: selectedChapterContents.data.position,
-        isSelected: selectedChapterContents.data.isSelected,
       },
       ({ id, data }) => {
         setSelectedChapterContents({
@@ -139,18 +138,22 @@ function Page({ ...props }) {
     );
   };
 
-  const onSave = ({ html, text }) => {
+  const onSave = ({ text }) => {
     const chapterManager = new FirestoreChapterManager();
 
+    logger.info(`Locking for document id "${selectedChapterContents.id}".`);
     chapterManager.lockForDocId(selectedChapterContents.id, {
       override: true,
     });
+
+    logger.info(
+      `Updating document "${selectedChapterContents.id}" with new data: ${text}`
+    );
     chapterManager.setChapterInfo(
       {
+        ...selectedChapterContents.data,
         name: selectedChapterContents.data.name,
         data: text,
-        position: selectedChapterContents.data.position,
-        isSelected: selectedChapterContents.data.isSelected,
       },
       ({ id, data }) => {
         setSelectedChapterContents({
@@ -164,8 +167,6 @@ function Page({ ...props }) {
       }
     );
   };
-
-  useEffect(() => {}, [selectedChapterContents]);
 
   return (
     <>
@@ -181,8 +182,8 @@ function Page({ ...props }) {
             html: !isSelectedChapterContentsEmpty,
           }}
           onChange={({ html, text }) => console.log(html, text)}
-          onCloseTextEditor={onCloseTextEditor}
           onSave={onSave}
+          onCloseTextEditor={onCloseTextEditor}
         />
       )}
     </>

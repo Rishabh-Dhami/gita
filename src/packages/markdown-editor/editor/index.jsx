@@ -111,6 +111,8 @@ MarkdownEditor._eventType = (event) => {
       return MarkdownEditor.emitter.EVENT_FOCUS;
     case 'scroll':
       return MarkdownEditor.emitter.EVENT_SCROLL;
+    case 'lang_change':
+      return MarkdownEditor.emitter.EVENT_LANG_CHANGE;
   }
 };
 
@@ -219,12 +221,6 @@ function MarkdownEditor({ ...props }) {
 
   const displayPreview = () => {
     setView({ ...view, md: false, menu: false, html: true });
-  };
-
-  const handleOnSave = () => {
-    displayPreview();
-    const { onSave } = props;
-    if (typeof onSave === 'function') onSave({ text });
   };
 
   const renderHTML = (text) => {
@@ -495,6 +491,13 @@ function MarkdownEditor({ ...props }) {
     }
   };
 
+  /**
+   * @function editorKeyDownEventHandler() - Handles the keydown events of the
+   *                                         text editor.
+   *
+   * Mainly this function handles formatting of ordered or un-ordered list while
+   * not composing.
+   */
   const editorKeyDownEventHandler = (e) => {
     const { keyCode, key, currentTarget } = e;
     if ((keyCode === 13 || key === 'Enter') && composing === false) {
@@ -522,15 +525,25 @@ function MarkdownEditor({ ...props }) {
         e.preventDefault();
       };
 
+      // In case of a un-ordered list we add a list style marker '*' at the
+      // beginning of the line when pressed the return key so to keep the user
+      // adding more points to its list.
       const isSymbol = lineInfo.currentLine.match(/^(\s*?)\* /);
       if (isSymbol) {
+        // We don't want any un-ordered list style marker if the line just ends
+        // with it, we only add the symbol if the user intends to make it a list.
         if (/^(\s*?)\* $/.test(lineInfo.currentLine)) emptyCurrentLine();
         else addSymbol(isSymbol[0]);
         return;
       }
 
+      // In case of a ordered list we add a list style marker 'N' at the beginning
+      // of the line when pressed the return key so to keep the user adding more
+      // points to its list.
       const isOrderList = lineInfo.currentLine.match(/^(\s*?)(\d+)\. /);
       if (isOrderList) {
+        // We don't want any ordered list style marker if the line just ends
+        // with it, we only add the symbol if the user intends to make it a list.
         if (/^(\s*?)(\d+)\. $/.test(lineInfo.currentLine)) {
           emptyCurrentLine();
         } else {
@@ -552,7 +565,6 @@ function MarkdownEditor({ ...props }) {
 
   const handleDrop = (e) => {
     e.preventDefault();
-    // @TODO: Handle drop event.
   };
 
   const handleChange = (e) => {
@@ -569,13 +581,19 @@ function MarkdownEditor({ ...props }) {
     setView({ ...view, menu: !view.menu });
   };
 
+  const handleOnSave = (e) => {
+    displayPreview();
+    const { onSave } = props;
+    if (typeof onSave === 'function') onSave({ text: e.target.value });
+  };
+
   useEffect(() => {
     const handleKeyboard = {
       key: 'Enter',
       keyCode: 13,
       aliasCommand: true,
       withKey: ['ctrlKey', 'shiftKey'],
-      callback: () => handleOnSave(),
+      callback: handleOnSave,
     };
     MarkdownEditor.onKeyboard(handleKeyboard);
 
@@ -586,17 +604,11 @@ function MarkdownEditor({ ...props }) {
 
   useEffect(() => {
     renderHTML(text);
-    globalEventEmitter.on(
-      globalEventEmitter.EVENT_LANG_CHANGE,
-      handleLocaleUpdate
-    );
+    MarkdownEditor.on('lang_change', handleLocaleUpdate);
     i18n.setUp();
 
     return () => {
-      globalEventEmitter.off(
-        globalEventEmitter.EVENT_LANG_CHANGE,
-        handleLocaleUpdate
-      );
+      MarkdownEditor.off('lang_change', handleLocaleUpdate);
     };
   }, []);
 
@@ -625,9 +637,7 @@ function MarkdownEditor({ ...props }) {
       setText(value);
       renderHTML(value);
     }
-  }, [text]);
 
-  useEffect(() => {
     nodeMdText.current.style.height = '';
     nodeMdText.current.style.height = `${nodeMdText.current.scrollHeight}px`;
   }, [text]);

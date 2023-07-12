@@ -554,11 +554,6 @@ function MarkdownEditor({ ...props }) {
     }
   };
 
-  MarkdownEditor.on('focus', focusEventHandler);
-  MarkdownEditor.on('blur', blurEventHandler);
-  MarkdownEditor.on('keydown', keydownEventHandler);
-  MarkdownEditor.on('editor_keydown', editorKeyDownEventHandler);
-
   const handleClick = (e) => {
     if (e.detail === 2) setView({ ...view, md: true, menu: true, html: false });
   };
@@ -587,28 +582,44 @@ function MarkdownEditor({ ...props }) {
     if (typeof onSave === 'function') onSave({ text: e.target.value });
   };
 
-  useEffect(() => {
-    const handleKeyboard = {
+  const keyboardListeners = [
+    {
       key: 'Enter',
       keyCode: 13,
       aliasCommand: true,
       withKey: ['ctrlKey', 'shiftKey'],
       callback: handleOnSave,
-    };
-    MarkdownEditor.onKeyboard(handleKeyboard);
+    },
+  ];
+
+  useEffect(() => {
+    Array.from(keyboardListeners).forEach((keyboardListener) =>
+      MarkdownEditor.onKeyboard(keyboardListener)
+    );
 
     return () => {
-      MarkdownEditor.offKeyboard(handleKeyboard);
+      Array.from(keyboardListeners).forEach((keyboardListener) =>
+        MarkdownEditor.offKeyboard(keyboardListener)
+      );
     };
   }, []);
 
   useEffect(() => {
     renderHTML(text);
-    MarkdownEditor.on('lang_change', handleLocaleUpdate);
     i18n.setUp();
+
+    MarkdownEditor.on('lang_change', handleLocaleUpdate);
+    MarkdownEditor.on('focus', focusEventHandler);
+    MarkdownEditor.on('blur', blurEventHandler);
+    MarkdownEditor.on('keydown', keydownEventHandler);
+    MarkdownEditor.on('editor_keydown', editorKeyDownEventHandler);
 
     return () => {
       MarkdownEditor.off('lang_change', handleLocaleUpdate);
+      MarkdownEditor.off('focus', focusEventHandler);
+      MarkdownEditor.off('blur', blurEventHandler);
+      MarkdownEditor.off('keydown', keydownEventHandler);
+      MarkdownEditor.off('editor_keydown', editorKeyDownEventHandler);
     };
   }, []);
 

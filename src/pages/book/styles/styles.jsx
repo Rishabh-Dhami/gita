@@ -20,14 +20,19 @@ export const Container = styled.div`
   background-color: ${BACKGROUND.lightgrey1};
   overflow-x: hidden;
   height: fit-content;
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 2000px;
+  margin: auto;
 `;
 
 export const BookContainer = styled.div`
   display: flex;
-  width: 100vw;
+  width: 100%;
   position: relative;
   margin-top: 50px;
-  height: fit-content;
+  height: 100vh;
 `;
 
 export const MenuContainer = styled.div`
@@ -37,8 +42,8 @@ export const MenuContainer = styled.div`
   left: 0;
   top: 0;
 
-  @media (min-width: 2500px) {
-    position: absolute;
+  @media (max-width: 1000px) {
+    display: none;
   }
 `;
 
@@ -59,8 +64,8 @@ export const OnThisPageContainer = styled.div`
   right: 0;
   top: 0;
 
-  @media (min-width: 2500px) {
-    position: absolute;
+  @media (max-width: 1000px) {
+    display: none;
   }
 `;
 
@@ -70,4 +75,10 @@ export const UserActionContainer = styled.div`
   display: flex;
   gap: 10px;
   justify-content: flex-end;
+
+  @media (max-width: 590px) {
+    .g-search-box {
+      display: none;
+    }
+  }
 `;

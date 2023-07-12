@@ -20,7 +20,11 @@ export const SignInContainer = styled.div`
   background-color: ${BACKGROUND.lightgrey1};
   width: 100%;
   height: 100vh;
-  overflow: auto;
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 2000px;
+  margin: auto;
 `;
 
 export const SignInMainContainer = styled.div`
@@ -74,19 +78,39 @@ export const SignInForm = styled.div`
   display: block;
   margin: auto;
   padding: 40px 0;
+
+  @media (max-width: 1000px) {
+    width: 70%;
+  }
+
+  @media (max-width: 500px) {
+    width: 90%;
+  }
 `;
 
 export const SignInWithGoogleContainer = styled.div`
   width: 80%;
   display: block;
   margin: 30px auto;
+
+  @media (max-width: 800px) {
+    width: 90%;
+  }
 `;
 
 export const SignInWithEmailContainer = styled.div`
   width: 80%;
   margin: auto;
 
+  @media (max-width: 800px) {
+    width: 90%;
+  }
+
   > div {
     width: 80%;
+
+    @media (max-width: 800px) {
+      width: 100%;
+    }
   }
 `;

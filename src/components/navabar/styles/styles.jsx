@@ -19,8 +19,8 @@ import { BACKGROUND } from '../../../constants/styles/colors.js';
 export const NavbarContainer = styled.div`
   position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
+  max-width: 2000px;
   height: 50px;
   background-color: ${BACKGROUND.white};
   display: flex;

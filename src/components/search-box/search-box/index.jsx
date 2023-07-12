@@ -196,7 +196,7 @@ function SearchBox({
   };
 
   return (
-    <div ref={wrapperRef}>
+    <div className="g-search-box" ref={wrapperRef}>
       <StyledContainer>
         {inputNode()}
         {dropdownNode()}

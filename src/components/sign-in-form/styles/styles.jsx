@@ -59,7 +59,7 @@ export const SignInActionContainer = styled.div`
   display: flex;
   justify-content: space-between;
 
-  @media (max-width: 925px) {
+  @media (max-width: 300px) {
     flex-direction: column;
   }
 `;
@@ -67,6 +67,7 @@ export const SignInActionContainer = styled.div`
 export const SignInButton = styled.button`
   border: none;
   outline: none;
+  min-width: 60px;
   max-width: 80px;
   height: 40px;
   text-align: center;

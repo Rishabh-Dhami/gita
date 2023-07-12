@@ -16,6 +16,7 @@ import styled from 'styled-components';
 
 export const HtmlRendererContainer = styled.div`
   color: #333;
+  font-family: 'Roboto', sans-serif;
 
   h1 {
     font-size: 32px;
@@ -44,7 +45,7 @@ export const HtmlRendererContainer = styled.div`
   }
 
   p {
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.7;
     margin: 8px 0;
   }
@@ -63,7 +64,7 @@ export const HtmlRendererContainer = styled.div`
 
   ol,
   ul {
-    font-size: 14px;
+    font-size: 18px;
     line-height: 28px;
     padding-left: 36px;
   }
@@ -84,7 +85,7 @@ export const HtmlRendererContainer = styled.div`
     display: block;
     background-color: #f5f5f5;
     padding: 20px;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 28px;
     border-radius: 0;
     overflow-x: auto;
@@ -96,7 +97,7 @@ export const HtmlRendererContainer = styled.div`
     border-radius: 0;
     padding: 3px 0;
     margin: 0;
-    font-size: 14px;
+    font-size: 18px;
     overflow-x: auto;
     word-break: normal;
   }
@@ -122,7 +123,7 @@ export const HtmlRendererContainer = styled.div`
   }
 
   table {
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.7;
     max-width: 100%;
     overflow: auto;

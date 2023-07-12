@@ -48,7 +48,7 @@ export const ChapterContainer = styled.div`
   height: 100%;
   display: block;
   margin: 0 auto;
-  padding: 5px 18px;
+  padding: 18px 18px;
 `;
 
 export const OnThisPageContainer = styled.div`

@@ -577,6 +577,7 @@ function MarkdownEditor({ ...props }) {
   };
 
   const handleOnSave = (e) => {
+    renderHTML(e.target.value);
     displayPreview();
     const { onSave } = props;
     if (typeof onSave === 'function') onSave({ text: e.target.value });

@@ -366,9 +366,7 @@ function MarkdownEditor({ ...props }) {
     replaceSelected,
     selection = undefined
   ) => {
-    if (selection === undefined || selection === null) {
-      selection = getSelection();
-    }
+    selection = getSelection();
     const beforeContent = text.slice(0, selection.start);
     const afterContent = text.slice(
       (replaceSelected && selection.end) || selection.start,
@@ -554,12 +552,63 @@ function MarkdownEditor({ ...props }) {
     }
   };
 
+  const uploadWithDataTransfer = (items) => {
+    const { onImageUpload } = configs;
+
+    const promiseQueue = [];
+    Array.prototype.forEach.call(items, (item) => {
+      if (
+        item.kind === 'file' &&
+        item.type.includes('image') &&
+        configs.allowPasteImage &&
+        typeof onImageUpload === 'function'
+      ) {
+        const file = item.getAsFile();
+        if (typeof file === 'undefined') return;
+
+        const placeholder = getUploadPlaceholder(file, onImageUpload);
+        promiseQueue.push(Promise.resolve(placeholder.placeholder));
+
+        placeholder.uploaded.then((string) => {
+          const text_ = text.replace(placeholder.placeholder, string);
+          const offset = string.length - placeholder.placeholder.length;
+          const selection = getSelection();
+
+          setMarkdownText(text_, undefined, {
+            start: selection.start + offset,
+            end: selection.end + offset,
+          });
+        });
+      } else if (item.kind === 'string' && item.type === 'text/plain') {
+        promiseQueue.push(
+          new Promise((resolve) => {
+            item.getAsString(resolve);
+          })
+        );
+      }
+    });
+
+    Promise.all(promiseQueue).then((result) => {
+      const text = result.join('');
+      const selection = getSelection();
+
+      insertMarkdownText(text, true, {
+        start: selection.start === selection.end ? text.length : 0,
+        end: text.length,
+      });
+    });
+  };
+
   const handleClick = (e) => {
     if (e.detail === 2) setView({ ...view, md: true, menu: true, html: false });
   };
 
   const handleDrop = (e) => {
+    if (!configs?.onImageUpload) return;
+    const event = e.nativeEvent;
+    if (!event?.dataTransfer || !event?.dataTransfer?.items) return;
     e.preventDefault();
+    uploadWithDataTransfer(event.dataTransfer.items);
   };
 
   const handleChange = (e) => {
@@ -568,8 +617,11 @@ function MarkdownEditor({ ...props }) {
   };
 
   const handlePaste = (e) => {
-    e.persist();
-    setMarkdownText(e.clipboardData.getData('Text'), e);
+    const event = e.nativeEvent;
+    const items = (event.clipboardData || window?.clipboardData).items;
+    if (!items) return;
+    e.preventDefault();
+    uploadWithDataTransfer(items);
   };
 
   const handleToggleMenu = (e) => {

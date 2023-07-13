@@ -366,10 +366,10 @@ function MarkdownEditor({ ...props }) {
     replaceSelected,
     selection = undefined
   ) => {
-    selection = getSelection();
-    const beforeContent = text.slice(0, selection.start);
+    const selection_ = getSelection();
+    const beforeContent = text.slice(0, selection_.start);
     const afterContent = text.slice(
-      (replaceSelected && selection.end) || selection.start,
+      (replaceSelected && selection_.end) || selection_.start,
       text.length
     );
 
@@ -381,7 +381,7 @@ function MarkdownEditor({ ...props }) {
             start: selection.start + beforeContent.length,
             end: selection.end + beforeContent.length,
           }
-        : { start: selection.start, end: selection.start }
+        : { start: selection_.start, end: selection_.start }
     );
   };
 

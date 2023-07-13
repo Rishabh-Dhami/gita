@@ -94,7 +94,7 @@ function Page({ ...props }) {
 
   const { selectedChapterContents, setSelectedChapterContents } = props;
 
-  const isSelectedChapterContentsEmpty =
+  const checkIfSelectedChapterContentsEmpty = () =>
     selectedChapterContents === null || selectedChapterContents === undefined
       ? true
       : selectedChapterContents?.data.data === null ||
@@ -102,9 +102,14 @@ function Page({ ...props }) {
         selectedChapterContents?.data.data === ''
       ? true
       : false;
+
   const [isEditableTextCellVisible, setIsEditableTextCellVisible] = useState(
-    !isSelectedChapterContentsEmpty
+    !checkIfSelectedChapterContentsEmpty()
   );
+
+  useEffect(() => {
+    setIsEditableTextCellVisible(!checkIfSelectedChapterContentsEmpty());
+  }, [selectedChapterContents]);
 
   const onCloseTextEditor = () => {
     const isConfirmedDeleteOperation = window.confirm(
@@ -177,9 +182,9 @@ function Page({ ...props }) {
         <TextEditor
           text={selectedChapterContents?.data.data}
           view={{
-            md: isSelectedChapterContentsEmpty,
-            menu: isSelectedChapterContentsEmpty,
-            html: !isSelectedChapterContentsEmpty,
+            md: checkIfSelectedChapterContentsEmpty(),
+            menu: checkIfSelectedChapterContentsEmpty(),
+            html: !checkIfSelectedChapterContentsEmpty(),
           }}
           onChange={({ html, text }) => console.log(html, text)}
           onSave={onSave}

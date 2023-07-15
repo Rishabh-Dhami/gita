@@ -44,9 +44,8 @@ export const MenuContainer = styled.div`
   top: 0;
 
   .slide-in-out-action-button {
-    position: absolute;
-    top: 10px;
-    right: -15px;
+    position: fixed;
+    top: 60px;
     width: 60px;
     height: 50px;
     display: flex;
@@ -59,10 +58,18 @@ export const MenuContainer = styled.div`
     cursor: pointer;
     background-color: ${BACKGROUND.white};
     box-shadow: 0 0 5px 2px ${BACKGROUND.lightgrey1};
-    z-index: 1;
+    z-index: 7;
 
     &:hover {
       transform: scale(1.1);
+    }
+
+    &.slide-out {
+      left: 210px;
+    }
+
+    &.slide-in {
+      left: -40px;
     }
   }
 

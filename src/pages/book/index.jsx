@@ -273,7 +273,9 @@ function Book({ ...props }) {
           }
         >
           <span
-            className="slide-in-out-action-button"
+            className={`slide-in-out-action-button ${
+              menuContainerPosition === 'out' ? 'slide-out' : 'slide-in'
+            }`}
             onClick={handleMenuContainerPositionUpdate}
           >
             {menuContainerPosition === 'out' ? '<' : '>'}

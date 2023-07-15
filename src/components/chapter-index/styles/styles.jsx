@@ -33,7 +33,7 @@ export const ChapterIndexContainer = styled.div`
           ? slideOut
           : 'none'}
       2s linear;
-    z-index: 1;
+    z-index: 8;
 
     ::-webkit-scrollbar {
       width: 0px;

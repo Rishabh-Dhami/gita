@@ -30,7 +30,7 @@ export const NavbarContainer = styled.div`
   padding: 0 16px;
   box-shadow: 0px -5px 20px #888888;
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 9;
 `;
 
 export const RightChildContainer = styled.div`

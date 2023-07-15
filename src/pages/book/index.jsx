@@ -17,6 +17,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { v4 as uuid } from 'uuid';
 
+import { useWindowSize } from '../../hooks/useWindowSize.jsx';
+
 import {
   FirestoreChapterManager,
   FirestoreSupportedTranslationLanguageManager,
@@ -252,16 +254,41 @@ function Book({ ...props }) {
     });
   }, [selectedChapter]);
 
+  const [menuContainerPosition, setMenuContainerPosition] = useState('out');
+
+  const handleMenuContainerPositionUpdate = (e) => {
+    if (menuContainerPosition === 'out') setMenuContainerPosition('in');
+    else setMenuContainerPosition('out');
+  };
+
+  const [width, height] = useWindowSize();
+
+  useEffect(() => {
+    if (width < 1000) setMenuContainerPosition('in');
+    else if (width >= 1000) setMenuContainerPosition('out');
+  }, [width, height]);
+
   return (
     <Container>
       <Navbar rightChild={<UserAction />} />
       <BookContainer>
-        <MenuContainer>
+        <MenuContainer
+          className={
+            menuContainerPosition === 'out' ? 'container-out' : 'container-in'
+          }
+        >
+          <span
+            className="slide-in-out-action-button"
+            onClick={handleMenuContainerPositionUpdate}
+          >
+            {menuContainerPosition === 'out' ? '<' : '>'}
+          </span>
           <ChapterIndex
             selectedChapter={selectedChapter}
             setSelectedChapter={setSelectedChapter}
             chapters={chapters}
             setChapters={setChapters}
+            position={menuContainerPosition}
           />
         </MenuContainer>
         <ChapterContainer>

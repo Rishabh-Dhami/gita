@@ -38,12 +38,40 @@ export const BookContainer = styled.div`
 export const MenuContainer = styled.div`
   height: 100vh;
   width: 100%;
+  position: relative;
   max-width: 250px;
   left: 0;
   top: 0;
 
-  @media (max-width: 1000px) {
-    display: none;
+  .slide-in-out-action-button {
+    position: absolute;
+    top: 10px;
+    right: -15px;
+    width: 60px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding-right: 5px;
+    font-weight: 800;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    cursor: pointer;
+    background-color: ${BACKGROUND.white};
+    box-shadow: 0 0 5px 2px ${BACKGROUND.lightgrey1};
+    z-index: 1;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &.container-in {
+    width: 0;
+  }
+
+  @media (max-width: 700px) {
+    position: absolute;
   }
 `;
 

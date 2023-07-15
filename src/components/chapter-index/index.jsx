@@ -23,7 +23,6 @@ import {
   ChapterCell,
   ChaptersContainer,
   ChapterIndexContainer,
-  ChapterIndexActionContainer,
   ChapterAddButton,
 } from './styles/styles.jsx';
 
@@ -32,6 +31,7 @@ function ChapterIndex({
   setSelectedChapter,
   chapters,
   setChapters,
+  position,
 }) {
   const [newChapterName, setNewChapterName] = useState('');
   const [addChapterEvent, setAddChapterEvent] = useState('deactive');
@@ -76,66 +76,74 @@ function ChapterIndex({
 
   return (
     <ChapterIndexContainer>
-      <ChapterIndexActionContainer>
-        {addChapterEvent === 'deactive' ? (
-          <SearchBox
-            placeholder="Search"
-            name="Filter Chapter"
-            data={chapters}
-            fuseConfigs={{ keys: ['name'] }}
-            autoFocus={false}
-            onSelect={(record) => record}
-            inputBackgroundColor="#f1f3f4"
-            inputBorderColor="#f1f3f4"
-            inputFontSize="16px"
-            clearOnSelect={true}
-            onSelect={(record) => {
-              setSelectedChapter({
-                id: record.item.id,
-                name: record.item.name,
-                position: record.item.position,
-                isSelected: true,
-              });
-            }}
-          />
-        ) : (
-          <Input
-            placeholder="Chapter Name"
-            name=""
-            value={newChapterName}
-            onChange={(e) => setNewChapterName(e.target.value)}
-            autoFocus={false}
-            onFocus={() => {}}
-            inputFontColor="#000"
-            inputBorderColor="#cacaca96"
-            inputFontSize="14px"
-            inputHeight="40px"
-            iconBoxSize="24px"
-            onKeyDown={handleQuickSubmit}
-            type="text"
-          />
-        )}
-        <ChapterAddButton onClick={executeAddChapterEvent}>+</ChapterAddButton>
-      </ChapterIndexActionContainer>
-      <ChaptersContainer>
-        {chapters &&
-          chapters.map(({ id, name, isSelected }) => (
-            <ChapterCell
-              key={id}
-              id={id}
-              active={isSelected}
-              onClick={(e) => {
+      <div
+        className={`chapter-index-container ${
+          position === 'out' ? 'container-out' : 'container-in'
+        }`}
+      >
+        <div className="chapter-index-action-container">
+          {addChapterEvent === 'deactive' ? (
+            <SearchBox
+              placeholder="Search"
+              name="Filter Chapter"
+              data={chapters}
+              fuseConfigs={{ keys: ['name'] }}
+              autoFocus={false}
+              onSelect={(record) => record}
+              inputBackgroundColor="#f1f3f4"
+              inputBorderColor="#f1f3f4"
+              inputFontSize="16px"
+              clearOnSelect={true}
+              onSelect={(record) => {
                 setSelectedChapter({
-                  id: e.target.getAttribute('id'),
-                  name: e.target.innerText,
+                  id: record.item.id,
+                  name: record.item.name,
+                  position: record.item.position,
                   isSelected: true,
                 });
               }}
-            >
-              {name}
-            </ChapterCell>
-          ))}
-      </ChaptersContainer>
+            />
+          ) : (
+            <Input
+              placeholder="Chapter Name"
+              name=""
+              value={newChapterName}
+              onChange={(e) => setNewChapterName(e.target.value)}
+              autoFocus={false}
+              onFocus={() => {}}
+              inputFontColor="#000"
+              inputBorderColor="#cacaca96"
+              inputFontSize="14px"
+              inputHeight="40px"
+              iconBoxSize="24px"
+              onKeyDown={handleQuickSubmit}
+              type="text"
+            />
+          )}
+          <ChapterAddButton onClick={executeAddChapterEvent}>
+            +
+          </ChapterAddButton>
+        </div>
+        <ChaptersContainer>
+          {chapters &&
+            chapters.map(({ id, name, isSelected }) => (
+              <ChapterCell
+                key={id}
+                id={id}
+                active={isSelected}
+                onClick={(e) => {
+                  setSelectedChapter({
+                    id: e.target.getAttribute('id'),
+                    name: e.target.innerText,
+                    isSelected: true,
+                  });
+                }}
+              >
+                {name}
+              </ChapterCell>
+            ))}
+        </ChaptersContainer>
+      </div>
     </ChapterIndexContainer>
   );
 }

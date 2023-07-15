@@ -17,36 +17,57 @@ import styled from 'styled-components';
 import { BACKGROUND, COLOR } from '../../../constants/styles/colors.js';
 
 export const ChapterIndexContainer = styled.div`
-  width: 100%;
-  max-width: 250px;
-  height: 100%;
-  position: fixed;
-  background-color: ${BACKGROUND.white};
-  overflow-x: hidden;
-  overflow-y: scroll;
+  position: relative;
 
-  ::-webkit-scrollbar {
-    width: 0px;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 50px;
-  }
-  ::-webkit-scrollbar-button {
-    display: none;
-  }
-  ::-webkit-scrollbar-corner {
-    background-color: #e3e2e1;
-  }
-`;
+  .chapter-index-container {
+    max-width: 250px;
+    height: 100%;
+    position: fixed;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background-color: ${BACKGROUND.white};
+    animation: ${({ effect }) =>
+        effect === 'slideIn'
+          ? slideIn
+          : effect === 'slideOut'
+          ? slideOut
+          : 'none'}
+      2s linear;
+    z-index: 1;
 
-export const ChapterIndexActionContainer = styled.div`
-  padding: 12px;
-  display: flex;
-  gap: 10px;
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 50px;
+    }
+    ::-webkit-scrollbar-button {
+      display: none;
+    }
+    ::-webkit-scrollbar-corner {
+      background-color: #e3e2e1;
+    }
+
+    &.container-in {
+      width: 0;
+    }
+
+    &.container-out {
+      width: 100%;
+    }
+  }
+
+  .chapter-index-action-container {
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    overflow: hidden;
+  }
 `;
 
 export const ChapterAddButton = styled.div`

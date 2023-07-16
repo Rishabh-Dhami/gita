@@ -26,14 +26,13 @@ export const Container = styled.div`
   margin: auto;
 
   .book-content-container {
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     scroll-behaviour: smooth;
     display: flex;
     width: 100%;
     position: relative;
     margin: 50px 0px;
-    height: calc(100vh - 50px);
+    height: content-fit;
   }
 `;
 

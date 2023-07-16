@@ -18,21 +18,23 @@ import { BACKGROUND } from '../../../constants/styles/colors.js';
 
 export const Container = styled.div`
   background-color: ${BACKGROUND.lightgrey1};
-  overflow-x: hidden;
   height: fit-content;
   position: relative;
   display: block;
   width: 100%;
   max-width: 2000px;
   margin: auto;
-`;
 
-export const BookContainer = styled.div`
-  display: flex;
-  width: 100%;
-  position: relative;
-  margin-top: 50px;
-  height: 100vh;
+  .book-content-container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behaviour: smooth;
+    display: flex;
+    width: 100%;
+    position: relative;
+    margin: 50px 0px;
+    height: calc(100vh - 50px);
+  }
 `;
 
 export const MenuContainer = styled.div`
@@ -70,6 +72,10 @@ export const MenuContainer = styled.div`
 
     &.slide-in {
       left: -40px;
+    }
+
+    @media (min-width: 2000px) {
+      display: none;
     }
   }
 

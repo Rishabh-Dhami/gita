@@ -50,6 +50,9 @@ export const GlobalStyle = createGlobalStyle`
    */ 
   body {
     margin: 0;
+    width:100%;
+    overflow-x:hidden;
+    overflow-y:hidden;
   }
 
   /**

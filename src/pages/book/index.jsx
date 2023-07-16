@@ -37,7 +37,6 @@ import {
 import {
   Container,
   MenuContainer,
-  BookContainer,
   ChapterContainer,
   OnThisPageContainer,
   UserActionContainer,
@@ -271,7 +270,7 @@ function Book({ ...props }) {
   return (
     <Container>
       <Navbar rightChild={<UserAction />} />
-      <BookContainer>
+      <div className="book-content-container">
         <MenuContainer
           className={
             menuContainerPosition === 'out' ? 'container-out' : 'container-in'
@@ -302,7 +301,7 @@ function Book({ ...props }) {
           )}
         </ChapterContainer>
         <OnThisPageContainer></OnThisPageContainer>
-      </BookContainer>
+      </div>
     </Container>
   );
 }

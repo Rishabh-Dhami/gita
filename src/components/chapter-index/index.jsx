@@ -23,7 +23,6 @@ import {
   ChapterCell,
   ChaptersContainer,
   ChapterIndexContainer,
-  ChapterAddButton,
 } from './styles/styles.jsx';
 
 function ChapterIndex({
@@ -120,9 +119,9 @@ function ChapterIndex({
               type="text"
             />
           )}
-          <ChapterAddButton onClick={executeAddChapterEvent}>
+          <span className="add-chapter-button" onClick={executeAddChapterEvent}>
             +
-          </ChapterAddButton>
+          </span>
         </div>
         <ChaptersContainer>
           {chapters &&

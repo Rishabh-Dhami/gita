@@ -65,29 +65,29 @@ export const ChapterIndexContainer = styled.div`
     padding: 12px;
     display: flex;
     gap: 10px;
-    align-items: center;
     overflow: hidden;
-  }
-`;
 
-export const ChapterAddButton = styled.div`
-  width: 50px;
-  height: 40px;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 36px;
-  font-weight: bold;
-  background: -webkit-linear-gradient(#eee, #333);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  cursor: pointer;
-  box-shadow: 0 0 5px 0px #888888;
-  user-select: none;
+    .add-chapter-button {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 32px;
+      font-weight: bold;
+      background: -webkit-linear-gradient(#eee, #333);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+      box-shadow: 0 0 5px 0px #888888;
+      user-select: none;
 
-  &:active {
-    transform: scale(0.9);
+      &:active {
+        transform: scale(0.9);
+      }
+    }
   }
 `;
 

@@ -52,7 +52,7 @@ export const MenuContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: right;
-    padding-right: 5px;
+    padding-right: 8px;
     font-weight: 800;
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;

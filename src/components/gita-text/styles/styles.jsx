@@ -17,7 +17,6 @@ import styled from 'styled-components';
 import { COLOR } from '../../../constants/styles/colors.js';
 
 export const GitaTextContainer = styled.div`
-  font-family: 'Amatic SC', cursive;
   font-size: 40px;
   color: ${COLOR.black};
   cursor: pointer;

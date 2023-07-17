@@ -55,10 +55,6 @@ export const SignInHeader = styled.div`
         font-size: 60px;
         font-weight: normal;
       }
-
-      p {
-        font-family: 'Roboto', sans-serif;
-      }
     }
   }
 `;

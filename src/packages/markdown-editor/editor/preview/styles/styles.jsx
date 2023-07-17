@@ -16,7 +16,6 @@ import styled from 'styled-components';
 
 export const HtmlRendererContainer = styled.div`
   color: #333;
-  font-family: 'Roboto', sans-serif;
 
   h1 {
     font-size: 32px;
@@ -28,15 +27,31 @@ export const HtmlRendererContainer = styled.div`
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 28px;
     padding: 0px 0;
     border: none;
     font-weight: 700;
-    margin: 24px 0;
+    margin: 28px 0;
     line-height: 1.7;
   }
 
   h3 {
+    font-size: 24px;
+    margin: 14px 0;
+    padding: 0px 0;
+    line-height: 1.7;
+    border: none;
+  }
+
+  h4 {
+    font-size: 20px;
+    margin: 20px 0;
+    padding: 0px 0;
+    line-height: 1.7;
+    border: none;
+  }
+
+  h5 {
     font-size: 18px;
     margin: 18px 0;
     padding: 0px 0;
@@ -44,8 +59,16 @@ export const HtmlRendererContainer = styled.div`
     border: none;
   }
 
+  h6 {
+    font-size: 16px;
+    margin: 16px 0;
+    padding: 0px 0;
+    line-height: 1.7;
+    border: none;
+  }
+
   p {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.7;
     margin: 8px 0;
   }
@@ -64,7 +87,7 @@ export const HtmlRendererContainer = styled.div`
 
   ol,
   ul {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 28px;
     padding-left: 36px;
   }
@@ -85,7 +108,7 @@ export const HtmlRendererContainer = styled.div`
     display: block;
     background-color: #f5f5f5;
     padding: 20px;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 28px;
     border-radius: 0;
     overflow-x: auto;
@@ -97,7 +120,7 @@ export const HtmlRendererContainer = styled.div`
     border-radius: 0;
     padding: 3px 0;
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     overflow-x: auto;
     word-break: normal;
   }
@@ -123,7 +146,7 @@ export const HtmlRendererContainer = styled.div`
   }
 
   table {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.7;
     max-width: 100%;
     overflow: auto;
@@ -163,5 +186,57 @@ export const HtmlRendererContainer = styled.div`
     padding: 10px 15px;
     word-break: break-word;
     min-width: 60px;
+  }
+
+  @media (max-width: 500px) {
+    h1 {
+      font-size: 26px;
+      margin: 26px 0;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin: 24px 0;
+    }
+
+    h3 {
+      font-size: 22px;
+      margin: 22px 0;
+    }
+
+    h4 {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+
+    h5 {
+      font-size: 18px;
+      margin: 18px 0;
+    }
+
+    h6 {
+      font-size: 16px;
+      margin: 16px 0;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    ul {
+      font-size: 16px;
+    }
+
+    pre {
+      font-size: 16px;
+    }
+
+    code {
+      font-size: 16px;
+    }
+
+    table {
+      font-size: 16px;
+    }
   }
 `;

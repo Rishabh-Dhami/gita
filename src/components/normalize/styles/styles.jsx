@@ -52,6 +52,7 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     width:100%;
     height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
   /**

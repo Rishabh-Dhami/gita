@@ -14,8 +14,6 @@
 
 import React from 'react';
 
-import MarkdownIt from 'markdown-it';
-
 import {
   Link,
   Bold,
@@ -38,7 +36,8 @@ import MarkdownEditor from '../../packages/markdown-editor/editor/index.jsx';
 
 import { TextAreaContainer } from './styles/styles.jsx';
 
-const mdParser = new MarkdownIt();
+const converter = new showdown.Converter();
+converter.setFlavor('github');
 
 function TextEditor({ text, view, onChange, onSave, onCloseTextEditor }) {
   MarkdownEditor.usePlugin(Header);
@@ -62,7 +61,7 @@ function TextEditor({ text, view, onChange, onSave, onCloseTextEditor }) {
     <TextAreaContainer>
       <MarkdownEditor
         text={text}
-        renderHTML={(text) => mdParser.render(text)}
+        renderHTML={(text) => converter.makeHtml(text)}
         view={{ md: true, menu: true, html: false, ...view }}
         onChange={onChange}
         onSave={onSave}

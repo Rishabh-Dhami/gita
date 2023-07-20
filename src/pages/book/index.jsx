@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { v4 as uuid } from 'uuid';
@@ -93,6 +93,8 @@ function Page({ ...props }) {
     props?.debug === true ? LOGGER.DEBUG : LOGGER.OFF
   );
 
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
+
   const { selectedChapterContents, setSelectedChapterContents } = props;
 
   const checkIfSelectedChapterContentsEmpty = () =>
@@ -109,6 +111,7 @@ function Page({ ...props }) {
   );
 
   useEffect(() => {
+    forceUpdate();
     setIsEditableTextCellVisible(!checkIfSelectedChapterContentsEmpty());
   }, [selectedChapterContents]);
 

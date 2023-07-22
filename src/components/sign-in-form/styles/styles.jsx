@@ -67,7 +67,8 @@ export const SignInActionContainer = styled.div`
 export const SignInButton = styled.button`
   border: none;
   outline: none;
-  min-width: 60px;
+  min-width: 70px;
+  width: 100%;
   max-width: 80px;
   height: 40px;
   text-align: center;

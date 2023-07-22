@@ -61,6 +61,8 @@ export const SignInActionContainer = styled.div`
 
   @media (max-width: 300px) {
     flex-direction: column;
+    height: fit-content;
+    padding: 10px 0;
   }
 `;
 
@@ -70,6 +72,7 @@ export const SignInButton = styled.button`
   min-width: 70px;
   width: 100%;
   max-width: 80px;
+  min-height: 40px;
   height: 40px;
   text-align: center;
   color: ${COLOR.white};

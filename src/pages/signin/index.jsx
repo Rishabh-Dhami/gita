@@ -21,50 +21,36 @@ import {
   GoogleSignInButton,
 } from '../../components/index.jsx';
 
-import {
-  SignInForm,
-  SignInHeader,
-  SignInContainer,
-  SignInMainContainer,
-  SignInFormMainContainer,
-  SignInWithEmailContainer,
-  SignInWithGoogleContainer,
-} from './styles/styles.jsx';
-
-function SignInFormContainer() {
-  return (
-    <SignInMainContainer>
-      <SignInHeader>
-        <div>
-          <div>
-            <p>
-              <strong>Sign in</strong>
-            </p>
-            <p>Access your Gita account</p>
-          </div>
-        </div>
-      </SignInHeader>
-      <SignInFormMainContainer>
-        <SignInForm>
-          <SignInWithGoogleContainer>
-            <GoogleSignInButton />
-          </SignInWithGoogleContainer>
-          <SignInWithEmailContainer>
-            <div>
-              <SignInWithEmailForm />
-            </div>
-          </SignInWithEmailContainer>
-        </SignInForm>
-      </SignInFormMainContainer>
-    </SignInMainContainer>
-  );
-}
+import { SignInContainer } from './styles/styles.jsx';
 
 function SignIn() {
   return (
     <SignInContainer>
       <Navbar />
-      <SignInFormContainer />
+      <div className="main-form-container">
+        <div className="sign-in-header">
+          <div className="sign-in-header-holder">
+            <div className="sign-in-header-content">
+              <p>
+                <strong>Sign in</strong>
+              </p>
+              <p>Access your Gita account</p>
+            </div>
+          </div>
+        </div>
+        <div className="sign-in-form-container">
+          <div className="sign-in-form">
+            <div className="sign-in-google">
+              <GoogleSignInButton />
+            </div>
+            <div className="sign-in-email">
+              <div>
+                <SignInWithEmailForm />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </SignInContainer>
   );
 }

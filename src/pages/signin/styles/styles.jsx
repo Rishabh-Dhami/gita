@@ -25,88 +25,96 @@ export const SignInContainer = styled.div`
   width: 100%;
   max-width: 2000px;
   margin: auto;
-`;
 
-export const SignInMainContainer = styled.div`
-  position: relative;
-  margin-top: 50px;
-  box-sizing: border-box;
-`;
+  .main-form-container {
+    position: relative;
+    margin-top: 50px;
+    box-sizing: border-box;
+  }
 
-export const SignInHeader = styled.div`
-  height: 200px;
-  background-color: ${BACKGROUND.white};
-  width: 100%;
+  .sign-in-header {
+    height: 200px;
+    background-color: ${BACKGROUND.white};
+    width: 100%;
+  }
 
-  > div {
+  .sign-in-header-holder {
     width: 80%;
     height: 100%;
     display: block;
     margin: auto;
+  }
 
-    > div {
-      width: 100%;
-      height: 80%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+  .sign-in-header-content {
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-      strong {
-        font-size: 60px;
-        font-weight: normal;
-      }
+    strong {
+      font-size: 60px;
+      font-weight: normal;
     }
   }
-`;
 
-export const SignInFormMainContainer = styled.div`
-  position: absolute;
-  top: 160px;
-  width: 100%;
-  height: content-fit;
-  display: block;
-`;
-
-export const SignInForm = styled.div`
-  background-color: ${BACKGROUND.white};
-  width: 50%;
-  height: 500px;
-  display: block;
-  margin: auto;
-  padding: 40px 0;
-
-  @media (max-width: 1000px) {
-    width: 70%;
+  .sign-in-form-container {
+    position: absolute;
+    top: 160px;
+    width: 100%;
+    height: content-fit;
+    display: block;
   }
 
-  @media (max-width: 500px) {
-    width: 90%;
-  }
-`;
+  .sign-in-form {
+    background-color: ${BACKGROUND.white};
+    width: 50%;
+    height: 500px;
+    display: block;
+    margin: auto;
+    padding: 40px 0;
 
-export const SignInWithGoogleContainer = styled.div`
-  width: 80%;
-  display: block;
-  margin: 30px auto;
-
-  @media (max-width: 800px) {
-    width: 90%;
-  }
-`;
-
-export const SignInWithEmailContainer = styled.div`
-  width: 80%;
-  margin: auto;
-
-  @media (max-width: 800px) {
-    width: 90%;
-  }
-
-  > div {
-    width: 80%;
+    @media (max-width: 1000px) {
+      width: 70%;
+    }
 
     @media (max-width: 800px) {
+      width: 80%;
+    }
+
+    @media (max-width: 700px) {
+      width: 90%;
+    }
+
+    @media (max-width: 600px) {
       width: 100%;
+    }
+  }
+
+  .sign-in-google {
+    width: 80%;
+    display: block;
+    margin: 30px auto;
+
+    @media (max-width: 800px) {
+      width: 90%;
+    }
+  }
+
+  .sign-in-email {
+    width: 80%;
+    margin: auto;
+
+    @media (max-width: 800px) {
+      width: 90%;
+    }
+
+    > div {
+      width: 80%;
+
+      @media (max-width: 800px) {
+        width: 100%;
+      }
     }
   }
 `;

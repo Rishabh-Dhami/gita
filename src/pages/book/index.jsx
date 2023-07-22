@@ -27,6 +27,7 @@ import LOGGER from '../../lib/logger/logger.js';
 
 import {
   Navbar,
+  Footer,
   SearchBox,
   TextEditor,
   AddTextCell,
@@ -302,6 +303,7 @@ function Book({ ...props }) {
               setSelectedChapterContents={setSelectedChapterContents}
             />
           )}
+          <Footer />
         </ChapterContainer>
         <OnThisPageContainer></OnThisPageContainer>
       </div>

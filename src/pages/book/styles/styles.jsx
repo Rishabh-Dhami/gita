@@ -88,12 +88,15 @@ export const MenuContainer = styled.div`
 `;
 
 export const ChapterContainer = styled.div`
+  position: relative;
   width: 100%;
   max-width: 2000px;
+  min-height: 100vh;
   height: 100%;
   display: block;
   margin: 0 auto;
-  padding: 18px 18px;
+  padding: 0 18px;
+  padding-top: 18px;
 `;
 
 export const OnThisPageContainer = styled.div`

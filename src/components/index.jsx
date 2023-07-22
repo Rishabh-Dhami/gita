@@ -14,6 +14,7 @@
 
 export { SearchBox } from './search-box/index.jsx';
 
+export { default as Footer } from './footer/index.jsx';
 export { default as Navbar } from './navabar/index.jsx';
 export { default as GitaText } from './gita-text/index.jsx';
 export { default as TextEditor } from './text-area/index.jsx';

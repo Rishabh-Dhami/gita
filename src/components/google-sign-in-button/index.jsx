@@ -14,11 +14,8 @@
 
 import React from 'react';
 
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-
 import LOGGER from '../../lib/logger/logger.js';
-import { firebaseConfig } from '../../firebase/config.js';
+import { FirebaseOAuth } from '../../firebase/auth.js';
 
 import { Button, GoogleLogo } from './styles/styles.jsx';
 
@@ -26,26 +23,8 @@ function GoogleSignInButton({ callback = (result) => result }) {
   const logger = new LOGGER(GoogleSignInButton.name, LOGGER.INFO);
 
   const handleClick = async () => {
-    initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-        callback(result);
-        const context = { credential, token, user, result };
-        logger.info(null, context);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        const context = { credential, errorCode, errorMessage, email, error };
-        logger.error('Error in Signing in with Popup method', context);
-      });
+    const oAuth = new FirebaseOAuth();
+    oAuth.signInWithGoogle(callback);
   };
 
   return (

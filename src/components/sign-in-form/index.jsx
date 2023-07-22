@@ -15,6 +15,8 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
+import { FirebaseOAuth } from '../../firebase/auth.js';
+
 import {
   Form,
   Input,
@@ -59,7 +61,16 @@ function SignInForm() {
         <ForgottenPasswordContainer>
           Forgotten Password?
         </ForgottenPasswordContainer>
-        <SignInButton type="submit">Sign In</SignInButton>
+        <SignInButton
+          type="submit"
+          onClick={(e) => {
+            e.preventDefault();
+            const oAuth = new FirebaseOAuth();
+            oAuth.authenticateWithEmailAndPassword({email, password});
+          }}
+        >
+          Sign In
+        </SignInButton>
       </SignInActionContainer>
     </Form>
   );

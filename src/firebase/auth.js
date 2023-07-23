@@ -14,6 +14,8 @@
 
 import { initializeApp } from 'firebase/app';
 import {
+  setPersistence,
+  browserLocalPersistence,
   getAuth,
   signOut,
   signInWithPopup,
@@ -25,12 +27,22 @@ import { firebaseConfig } from './config.js';
 
 class FirebaseOAuth {
   constructor() {
-    initializeApp(firebaseConfig);
-
     this._auth = getAuth();
   }
 
+  async _setUserPersistence() {
+    await setPersistence(this._auth, browserLocalPersistence)
+      .then(() => {
+        initializeApp(firebaseConfig);
+      })
+      .catch((error) => {
+        console.log(error.code, error.message);
+      });
+  }
+
   async signInWithGoogle(callback) {
+    await this._setUserPersistence();
+
     const provider = new GoogleAuthProvider();
     await signInWithPopup(this._auth, provider)
       .then((result) => {
@@ -45,6 +57,8 @@ class FirebaseOAuth {
   }
 
   async authenticateWithEmailAndPassword({ email, password }, callback = null) {
+    await this._setUserPersistence();
+
     await createUserWithEmailAndPassword(this._auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
